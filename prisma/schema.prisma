@@ -18,14 +18,81 @@ enum Role {
   ADMIN
 }
 
+enum Status {
+  Pending
+  InProgress
+  Resolved
+}
+
 model User {
+  id                 Int                  @id @default(autoincrement())
+  firstName          String
+  lastName           String
+  email              String               @unique
+  password           String
+  role               Role                 @default(USER)
+  phoneNumber        String?
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
+  TicketCreated      Ticket[]             @relation("CreatedTickets")
+  TicketAssigned     Ticket[]             @relation("AssignedTickets")
+  Note               Note[]
+  Comment            Comment[]
+  PasswordResetToken PasswordResetToken[]
+}
+
+model Ticket {
+  id             Int       @id @default(autoincrement())
+  title          String
+  content        String
+  status         Status    @default(Pending)
+  createdBy      Int
+  assignedTo     Int
+  categoryID     Int
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  createdByUser  User      @relation("CreatedTickets", fields: [createdBy], references: [id])
+  assignedToUser User      @relation("AssignedTickets", fields: [assignedTo], references: [id])
+  category       Category  @relation(fields: [categoryID], references: [id])
+  Note           Note[]
+  Comment        Comment[]
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  title     String   @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Ticket    Ticket[]
+}
+
+model Note {
+  id        Int      @id @default(autoincrement())
+  ticketID  Int
+  notedBy   Int
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [notedBy], references: [id])
+  ticket    Ticket   @relation(fields: [ticketID], references: [id])
+}
+
+model Comment {
   id          Int      @id @default(autoincrement())
-  firstName   String
-  lastName    String
-  email       String   @unique
-  password    String
-  role        Role     @default(USER)
-  phoneNumber String?
+  ticketID    Int
+  commentedBy Int
+  content     String
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [commentedBy], references: [id])
+  ticket      Ticket   @relation(fields: [ticketID], references: [id])
+}
+
+model PasswordResetToken {
+  id        Int      @id @default(autoincrement())
+  userID    Int
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiredAt DateTime
+  user      User     @relation(fields: [userID], references: [id])
 }
