@@ -1,3 +1,5 @@
+import 'server-only';
+
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
 
