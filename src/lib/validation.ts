@@ -1,12 +1,11 @@
 import 'server-only';
-
 import { z } from 'zod';
 
 // const phoneRegex = new RegExp(
 // 	/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/,
 // );
 
-export const registerFormSchema = z
+export const SignupFormSchema = z
 	.object({
 		firstName: z.string().min(3, { message: 'Minimum 3 characters.' }).trim(),
 		lastName: z.string().min(3, { message: 'Minimum 3 characters.' }).trim(),

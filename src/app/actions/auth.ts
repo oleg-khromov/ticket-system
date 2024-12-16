@@ -1,8 +1,7 @@
 'use server';
-
-import { registerFormSchema } from '@/lib/validation';
+import { SignupFormSchema } from '@/lib/validation';
 import { getHashPassword } from '@/lib/bcrypt';
-import { createSession } from '@/lib/sessions';
+import { createSession } from '@/lib/session';
 import prisma from '@/lib/prisma';
 import { redirect } from 'next/navigation';
 
@@ -18,14 +17,15 @@ interface IUserWithPasswords extends IUser {
 	confirmPassword?: string;
 }
 
-export interface IRegisterFormState extends IUser {
-	errors?: Record<string, string[]>;
+export interface SignupFormState extends IUser {
+	errors?: Record<string, string | string[]>;
+	message?: string;
 }
 
-export async function register(
-	currentState: IRegisterFormState,
+export async function signup(
+	state: SignupFormState | undefined,
 	formData: FormData,
-) {
+): Promise<SignupFormState | undefined> {
 	const user = {
 		firstName: formData.get('firstName') as string,
 		lastName: formData.get('lastName') as string,
@@ -39,7 +39,7 @@ export async function register(
 		confirmPassword: formData.get('confirmPassword') as string,
 	};
 
-	const validatedFields = registerFormSchema.safeParse(userWithPasswords);
+	const validatedFields = SignupFormSchema.safeParse(userWithPasswords);
 
 	if (!validatedFields.success) {
 		return {
@@ -76,6 +76,12 @@ export async function register(
 			password: hashedPassword,
 		},
 	});
+
+	if (!createdUser) {
+		return {
+			message: 'An error occurred while creating your account.',
+		};
+	}
 
 	await createSession(createdUser.id);
 

@@ -1,15 +1,14 @@
 'use client';
-
 import { useActionState } from 'react';
-import { register } from '@/app/actions/auth';
+import { signup } from '@/app/actions/auth';
 import Link from 'next/link';
 
-export default function Register() {
-	const [state, action, isPending] = useActionState(register, null);
+export default function Signup() {
+	const [state, action, isPending] = useActionState(signup, undefined);
 	return (
 		<div className="auth-page">
 			<div className="container w-1/2">
-				<h1 className="title">Register</h1>
+				<h1 className="title">Sign Up</h1>
 				<form action={action} autoComplete="off" className="space-y-4">
 					<div>
 						<label htmlFor="firstName">
@@ -67,16 +66,19 @@ export default function Register() {
 							Password<span className="mandatory">*</span>
 						</label>
 						<input type="password" name="password" autoComplete="off" />
-						{state?.errors?.password && (
-							<div className="error">
-								<p>Password must:</p>
-								<ul className="list-disc list-inside ml-4">
-									{state.errors.password.map((error) => (
-										<li key={error}>{error}</li>
-									))}
-								</ul>
-							</div>
-						)}
+						{state?.errors?.password &&
+							(Array.isArray(state.errors.password) ? (
+								<div className="error">
+									<p>Password must:</p>
+									<ul className="list-disc list-inside ml-4">
+										{state.errors.password.map((error) => (
+											<li key={error}>{error}</li>
+										))}
+									</ul>
+								</div>
+							) : (
+								<p className="error">{state.errors.password}</p>
+							))}
 					</div>
 					<div>
 						<label htmlFor="confirmPassword">
@@ -89,7 +91,7 @@ export default function Register() {
 					</div>
 					<div className="flex items-end gap-4">
 						<button disabled={isPending} className="btn-primary">
-							Register
+							Sign Up
 						</button>
 						<Link href="/" className="text-link">
 							or login here
