@@ -10,7 +10,7 @@ dotenv.config();
  * @returns The hashed password as a string.
  */
 export async function getHashPassword(plainPassword: string): Promise<string> {
-	const saltRounds = parseInt(process.env.BCRYPT_SALT || '10', 10); // Determines the cost of hashing
+	const saltRounds = parseInt(process.env.BCRYPT_SALT || '10', 10);
 	const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
 	return hashedPassword;
 }

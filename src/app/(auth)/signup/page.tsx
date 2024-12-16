@@ -1,9 +1,9 @@
 'use client';
 import { useActionState } from 'react';
-import { signup } from '@/app/actions/auth';
+import { signup } from '@/actions/auth';
 import Link from 'next/link';
 
-export default function Signup() {
+export default function SignUp() {
 	const [state, action, isPending] = useActionState(signup, undefined);
 	return (
 		<div className="auth-page">
@@ -51,12 +51,7 @@ export default function Signup() {
 						<label htmlFor="email">
 							Email<span className="mandatory">*</span>
 						</label>
-						<input
-							type="text"
-							name="email"
-							defaultValue={state?.email ?? ''}
-							autoComplete="off"
-						/>
+						<input type="text" name="email" defaultValue={state?.email ?? ''} />
 						{state?.errors?.email && (
 							<p className="error">{state.errors.email}</p>
 						)}
@@ -65,7 +60,7 @@ export default function Signup() {
 						<label htmlFor="password">
 							Password<span className="mandatory">*</span>
 						</label>
-						<input type="password" name="password" autoComplete="off" />
+						<input type="password" name="password" />
 						{state?.errors?.password &&
 							(Array.isArray(state.errors.password) ? (
 								<div className="error">
@@ -93,8 +88,8 @@ export default function Signup() {
 						<button disabled={isPending} className="btn-primary">
 							Sign Up
 						</button>
-						<Link href="/" className="text-link">
-							or login here
+						<Link href="/signin" className="text-link">
+							or Sign In here
 						</Link>
 					</div>
 				</form>

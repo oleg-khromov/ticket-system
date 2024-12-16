@@ -5,7 +5,12 @@ import { z } from 'zod';
 // 	/^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/,
 // );
 
-export const SignupFormSchema = z
+export const SignInFormSchema = z.object({
+	email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
+	password: z.string().min(1, { message: 'Password is required.' }).trim(),
+});
+
+export const SignUpFormSchema = z
 	.object({
 		firstName: z.string().min(3, { message: 'Minimum 3 characters.' }).trim(),
 		lastName: z.string().min(3, { message: 'Minimum 3 characters.' }).trim(),
