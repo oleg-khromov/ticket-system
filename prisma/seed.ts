@@ -9,9 +9,9 @@ enum Role {
 }
 
 async function main() {
-	const plainPassword = 'admin';
+	const plainPassword = 'password';
 	const hashedPassword = await getHashPassword(plainPassword);
-	const user = await prisma.user.upsert({
+	const admin = await prisma.user.upsert({
 		where: { email: 'admin@script.nl' },
 		update: {},
 		create: {
@@ -23,7 +23,19 @@ async function main() {
 			phoneNumber: '3101234567',
 		},
 	});
-	console.log({ user });
+	const user = await prisma.user.upsert({
+		where: { email: 'user@script.nl' },
+		update: {},
+		create: {
+			firstName: 'user',
+			lastName: 'user',
+			email: 'user@script.nl',
+			password: hashedPassword,
+			role: Role.USER,
+			phoneNumber: '3101234567',
+		},
+	});
+	console.log(admin, user);
 }
 main()
 	.then(async () => {

@@ -2,6 +2,7 @@
 import { SignInFormSchema, SignUpFormSchema } from '@/lib/validation';
 import { getHashPassword, verifyPassword } from '@/lib/bcrypt';
 import { createSession, deleteSession } from '@/lib/session';
+import { sendConfirmationEmail } from '@/utils/email';
 import prisma from '@/lib/db';
 import { redirect } from 'next/navigation';
 
@@ -87,6 +88,10 @@ export async function signup(
 			message: 'An error occurred while creating your account.',
 		};
 	}
+
+	await sendConfirmationEmail(createdUser.email);
+	// const { error } = await sendConfirmationEmail(createdUser.email);
+	// if (error) return { message: 'Failed to send confirmation email' };
 
 	await createSession(createdUser.id);
 
