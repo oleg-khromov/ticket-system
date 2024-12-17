@@ -12,14 +12,25 @@ export default function SignIn() {
 				<form action={action} autoComplete="off" className="space-y-4">
 					<div>
 						<label htmlFor="email">Email</label>
-						<input type="text" name="email" defaultValue={state?.email ?? ''} />
+						<input
+							id="email"
+							type="text"
+							name="email"
+							autoComplete="off"
+							defaultValue={state?.email ?? ''}
+						/>
 						{state?.errors?.email && (
 							<p className="error">{state.errors.email}</p>
 						)}
 					</div>
 					<div>
 						<label htmlFor="password">Password</label>
-						<input type="password" name="password" />
+						<input
+							id="password"
+							type="password"
+							name="password"
+							autoComplete="off"
+						/>
 						{state?.errors?.password && (
 							<p className="error">{state.errors.password}</p>
 						)}

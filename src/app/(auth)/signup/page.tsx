@@ -15,6 +15,7 @@ export default function SignUp() {
 							First Name<span className="mandatory">*</span>
 						</label>
 						<input
+							id="firstName"
 							type="text"
 							name="firstName"
 							defaultValue={state?.firstName ?? ''}
@@ -28,6 +29,7 @@ export default function SignUp() {
 							Last Name<span className="mandatory">*</span>
 						</label>
 						<input
+							id="lastName"
 							type="text"
 							name="lastName"
 							defaultValue={state?.lastName ?? ''}
@@ -39,6 +41,7 @@ export default function SignUp() {
 					<div>
 						<label htmlFor="phoneNumber">Phone Number</label>
 						<input
+							id="phoneNumber"
 							type="text"
 							name="phoneNumber"
 							defaultValue={state?.phoneNumber ?? ''}
@@ -51,7 +54,13 @@ export default function SignUp() {
 						<label htmlFor="email">
 							Email<span className="mandatory">*</span>
 						</label>
-						<input type="text" name="email" defaultValue={state?.email ?? ''} />
+						<input
+							id="email"
+							type="text"
+							name="email"
+							autoComplete="off"
+							defaultValue={state?.email ?? ''}
+						/>
 						{state?.errors?.email && (
 							<p className="error">{state.errors.email}</p>
 						)}
@@ -60,7 +69,12 @@ export default function SignUp() {
 						<label htmlFor="password">
 							Password<span className="mandatory">*</span>
 						</label>
-						<input type="password" name="password" />
+						<input
+							id="password"
+							type="password"
+							name="password"
+							autoComplete="off"
+						/>
 						{state?.errors?.password &&
 							(Array.isArray(state.errors.password) ? (
 								<div className="error">
@@ -79,7 +93,12 @@ export default function SignUp() {
 						<label htmlFor="confirmPassword">
 							Confirm Password<span className="mandatory">*</span>
 						</label>
-						<input type="password" name="confirmPassword" />
+						<input
+							id="confirmPassword"
+							type="password"
+							name="confirmPassword"
+							autoComplete="off"
+						/>
 						{state?.errors?.confirmPassword && (
 							<p className="error">{state.errors.confirmPassword}</p>
 						)}

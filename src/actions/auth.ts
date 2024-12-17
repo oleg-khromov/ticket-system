@@ -1,7 +1,7 @@
 'use server';
 import { SignInFormSchema, SignUpFormSchema } from '@/lib/validation';
 import { getHashPassword, verifyPassword } from '@/lib/bcrypt';
-import { createSession } from '@/lib/session';
+import { createSession, deleteSession } from '@/lib/session';
 import prisma from '@/lib/db';
 import { redirect } from 'next/navigation';
 
@@ -145,4 +145,9 @@ export async function signin(
 	await createSession(existingUser.id);
 
 	redirect('/dashboard');
+}
+
+export async function logout() {
+	await deleteSession();
+	redirect('/');
 }
