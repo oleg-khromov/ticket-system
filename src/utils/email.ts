@@ -7,7 +7,7 @@ export const sendConfirmationEmail = async (email: string) => {
 	const resend = new Resend(process.env.RESEND_API_KEY);
 	const res = await resend.emails.send({
 		from: 'Ticket System <onboarding@resend.dev>',
-		to: ['dev.khromov.oleg@gmail.com', email],
+		to: email,
 		subject: 'Confirmation registration on TicketSystem',
 		react: React.createElement(EmailConfirmation),
 		headers: {
