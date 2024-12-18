@@ -24,7 +24,12 @@ export default function SignIn() {
 						)}
 					</div>
 					<div>
-						<label htmlFor="password">Password</label>
+						<div className="flex items-center justify-between gap-4">
+							<label htmlFor="password">Password</label>
+							<Link href="/reset-password" className="label-text">
+								Forgot Password?
+							</Link>
+						</div>
 						<input
 							id="password"
 							type="password"

@@ -1,8 +1,14 @@
 'use server';
-import { SignInFormSchema, SignUpFormSchema } from '@/lib/validation';
+import {
+	SignInFormSchema,
+	SignUpFormSchema,
+	ResetPasswordFormSchema,
+	ChangePasswordFormSchema,
+} from '@/lib/validation';
 import { getHashPassword, verifyPassword } from '@/lib/bcrypt';
 import { createSession, deleteSession } from '@/lib/session';
-import { sendConfirmationEmail } from '@/utils/email';
+import { createToken, verifyToken } from '@/lib/token';
+import { sendConfirmationEmail, sendResetPasswordEmail } from '@/utils/email';
 import prisma from '@/lib/db';
 import { redirect } from 'next/navigation';
 
@@ -26,6 +32,19 @@ export interface SignUpFormState extends IUser {
 export interface SignInFormState {
 	errors?: Record<string, string | string[]>;
 	email?: string;
+}
+
+export interface ResetPasswordFormState {
+	errors?: Record<string, string | string[]>;
+	message?: string;
+	email?: string;
+	success?: boolean;
+}
+
+export interface ChangePasswordFormState {
+	errors?: Record<string, string | string[]>;
+	message?: string;
+	success?: boolean;
 }
 
 export async function signup(
@@ -155,4 +174,134 @@ export async function signin(
 export async function logout() {
 	await deleteSession();
 	redirect('/');
+}
+
+export async function resetPassword(
+	state: ResetPasswordFormState | undefined,
+	formData: FormData,
+): Promise<ResetPasswordFormState | undefined> {
+	const validatedFields = ResetPasswordFormSchema.safeParse({
+		email: formData.get('email') as string,
+	});
+
+	if (!validatedFields.success) {
+		return {
+			errors: validatedFields.error.flatten().fieldErrors,
+			email: formData.get('email') as string,
+		};
+	}
+
+	const { email } = validatedFields.data;
+
+	const existingUser = await prisma.user.findUnique({
+		where: {
+			email,
+		},
+		select: {
+			id: true,
+			email: true,
+		},
+	});
+
+	if (!existingUser) {
+		return {
+			errors: {
+				email: "This email doesn't exist in the system.",
+			},
+			email,
+		};
+	}
+
+	const { token, expiresAt } = await createToken(existingUser.id);
+
+	const createdToken = await prisma.passwordResetToken.create({
+		data: {
+			token,
+			userId: existingUser.id,
+			expiresAt,
+		},
+	});
+
+	if (!createdToken) {
+		return {
+			message: 'An error occurred while creating password reset token.',
+		};
+	}
+
+	const sendEmail = await sendResetPasswordEmail(existingUser.email, token);
+
+	if (sendEmail.error)
+		return {
+			message: 'An error occurred while sending email to reset password.',
+		};
+	else
+		return {
+			success: true,
+		};
+}
+
+export async function changePassword(
+	state: ChangePasswordFormState | undefined,
+	formData: FormData,
+): Promise<ChangePasswordFormState | undefined> {
+	const validatedFields = ChangePasswordFormSchema.safeParse({
+		password: formData.get('password') as string,
+		confirmPassword: formData.get('confirmPassword') as string,
+	});
+
+	if (!validatedFields.success) {
+		return {
+			errors: validatedFields.error.flatten().fieldErrors,
+		};
+	}
+
+	const token = formData.get('token') as string;
+	const { password } = validatedFields.data;
+
+	if (!token)
+		return {
+			message: 'Invalid token.',
+		};
+
+	const payload = await verifyToken(token as string);
+	const { userId, expiresAt } = payload as {
+		userId: number;
+		expiresAt: string;
+	};
+
+	if (!userId)
+		return {
+			message: 'Invalid token.',
+		};
+
+	if (new Date(expiresAt) < new Date())
+		return {
+			message: 'Token has expired.',
+		};
+
+	const existingToken = await prisma.passwordResetToken.findUnique({
+		where: {
+			userId,
+			token,
+		},
+	});
+
+	if (!existingToken || new Date(existingToken.expiresAt) < new Date()) {
+		return {
+			message: 'Invalid or expired token.',
+		};
+	}
+
+	const hashedPassword = await getHashPassword(password);
+
+	await prisma.user.update({
+		where: { id: userId },
+		data: { password: hashedPassword },
+	});
+
+	await prisma.passwordResetToken.delete({ where: { userId, token } });
+
+	return {
+		success: true,
+	};
 }

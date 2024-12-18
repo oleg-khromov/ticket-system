@@ -102,4 +102,13 @@ body {
 	.mandatory {
 		@apply text-xs text-red-500 ml-1;
 	}
+	.label-text {
+		@apply block text-xs font-medium leading-6 text-slate-500 first-letter:capitalize;
+	}
+	.label-text:hover {
+		@apply text-indigo-600;
+	}
+	.small-text {
+		@apply mb-6 text-center text-base font-medium leading-6 text-slate-500 first-letter:capitalize;
+	}
 }

@@ -13,7 +13,7 @@ import {
 
 const baseUrl = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '';
 
-export const EmailConfirmation = () => (
+const EmailConfirmation = () => (
 	<Tailwind>
 		<Html lang="en">
 			<Head />
@@ -30,3 +30,5 @@ export const EmailConfirmation = () => (
 		</Html>
 	</Tailwind>
 );
+
+export default EmailConfirmation;

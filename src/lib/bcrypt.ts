@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export async function getHashPassword(plainPassword: string): Promise<string> {
-	const saltRounds = parseInt(process.env.BCRYPT_SALT || '10', 10);
+	const saltRounds = parseInt(process.env.SALT_ROUNDS_PASSWORD || '10', 10);
 	const hashedPassword = await bcrypt.hash(plainPassword, saltRounds);
 	return hashedPassword;
 }

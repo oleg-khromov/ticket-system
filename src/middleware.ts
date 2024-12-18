@@ -3,7 +3,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { decrypt, getSession } from '@/lib/session';
 
 const protectedRoutes = ['/dashboard'];
-const publicRoutes = ['/signin', '/signup', '/'];
+const publicRoutes = [
+	'/signin',
+	'/signup',
+	'/reset-password',
+	'/change-password/*',
+	'/',
+];
 
 export default async function middleware(req: NextRequest) {
 	const path = req.nextUrl.pathname;
