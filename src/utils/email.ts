@@ -23,7 +23,7 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
 	const resend = new Resend(process.env.RESEND_API_KEY);
 	const res = await resend.emails.send({
 		from: 'Ticket System <onboarding@resend.dev>',
-		to: ['dev.khromov.oleg@gmail.com', email],
+		to: email,
 		subject: 'Reset password on TicketSystem',
 		react: React.createElement(EmailResetPassword, { token }),
 		headers: {
