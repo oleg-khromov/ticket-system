@@ -2,19 +2,24 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { decrypt, getSession } from '@/lib/session';
 
-const protectedRoutes = ['/dashboard'];
+const protectedRoutes = ['/categories', '/tickets', '/users'];
 const publicRoutes = [
 	'/signin',
 	'/signup',
 	'/reset-password',
-	'/change-password/*',
+	'/change-password',
 	'/',
 ];
 
 export default async function middleware(req: NextRequest) {
 	const path = req.nextUrl.pathname;
-	const isProtectedRoute = protectedRoutes.includes(path);
-	const isPublicRoute = publicRoutes.includes(path);
+	const isProtectedRoute = protectedRoutes.some((route) =>
+		path.startsWith(route),
+	);
+	const isPublicRoute = publicRoutes.some((route) =>
+		route === '/' ? path === '/' : path.startsWith(route),
+	);
+	console.log('sssssssssssss', path, isProtectedRoute, isPublicRoute);
 
 	const session = await getSession();
 	const payload = await decrypt(session);
@@ -23,12 +28,8 @@ export default async function middleware(req: NextRequest) {
 		return NextResponse.redirect(new URL('/signin', req.nextUrl));
 	}
 
-	if (
-		isPublicRoute &&
-		payload?.userId &&
-		!req.nextUrl.pathname.startsWith('/dashboard')
-	) {
-		return NextResponse.redirect(new URL('/dashboard', req.nextUrl));
+	if (isPublicRoute && payload?.userId && !path.startsWith('/tickets')) {
+		return NextResponse.redirect(new URL('/tickets', req.nextUrl));
 	}
 
 	return NextResponse.next();

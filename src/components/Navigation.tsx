@@ -10,7 +10,9 @@ export default async function Navigation() {
 			<div>
 				{authUser ? (
 					<>
-						<NavLink label="Dashboard" href="/dashboard" />
+						<NavLink label="Categories" href="/categories" />
+						<NavLink label="Tickets" href="/tickets" />
+						<NavLink label="Users" href="/users" />
 						<form action={logout}>
 							<button className="nav-link">Logout</button>
 						</form>

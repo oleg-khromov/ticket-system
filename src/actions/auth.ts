@@ -114,7 +114,7 @@ export async function signup(
 
 	await createSession(createdUser.id);
 
-	redirect('/dashboard');
+	redirect('/tickets');
 }
 
 export async function signin(
@@ -168,7 +168,7 @@ export async function signin(
 
 	await createSession(existingUser.id);
 
-	redirect('/dashboard');
+	redirect('/tickets');
 }
 
 export async function logout() {
