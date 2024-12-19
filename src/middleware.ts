@@ -2,33 +2,52 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { decrypt, getSession } from '@/lib/session';
 
-const protectedRoutes = ['/categories', '/tickets', '/users'];
-const publicRoutes = [
-	'/signin',
-	'/signup',
-	'/reset-password',
-	'/change-password',
-	'/',
+const protectedRoutePatterns: RegExp[] = [
+	/^\/categories$/,
+	/^\/categories\/(new|\d+)$/,
+	/^\/categories\/\d+\/edit$/,
+	/^\/tickets$/,
+	/^\/tickets\/(new|\d+)$/,
+	/^\/tickets\/\d+\/edit$/,
+	/^\/users$/,
+	/^\/users\/(\d+)$/,
+	/^\/users\/\d+\/edit$/,
 ];
 
-export default async function middleware(req: NextRequest) {
-	const path = req.nextUrl.pathname;
-	const isProtectedRoute = protectedRoutes.some((route) =>
-		path.startsWith(route),
+const publicRoutePatterns: RegExp[] = [
+	/^\/signin$/,
+	/^\/signup$/,
+	/^\/reset-password$/,
+	/^\/change-password(\/.*)?$/,
+	/^\/$/,
+];
+
+const isRouteMatching = (patterns: RegExp[], path: string): boolean =>
+	patterns.some((pattern) => pattern.test(path));
+
+export default async function middleware(
+	req: NextRequest,
+): Promise<NextResponse> {
+	const path: string = req.nextUrl.pathname;
+
+	const isProtectedRoute: boolean = isRouteMatching(
+		protectedRoutePatterns,
+		path,
 	);
-	const isPublicRoute = publicRoutes.some((route) =>
-		route === '/' ? path === '/' : path.startsWith(route),
-	);
-	console.log('sssssssssssss', path, isProtectedRoute, isPublicRoute);
+	const isPublicRoute: boolean = isRouteMatching(publicRoutePatterns, path);
 
 	const session = await getSession();
 	const payload = await decrypt(session);
+
+	if (!isProtectedRoute && !isPublicRoute) {
+		return new NextResponse('Not Found', { status: 404 });
+	}
 
 	if (isProtectedRoute && !payload?.userId) {
 		return NextResponse.redirect(new URL('/signin', req.nextUrl));
 	}
 
-	if (isPublicRoute && payload?.userId && !path.startsWith('/tickets')) {
+	if (isPublicRoute && payload?.userId && path !== '/') {
 		return NextResponse.redirect(new URL('/tickets', req.nextUrl));
 	}
 
