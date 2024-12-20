@@ -52,7 +52,7 @@ body {
 		@apply w-full text-sm text-left rounded-md shadow-lg overflow-hidden mb-6 table-auto bg-white;
 	}
 	thead {
-		@apply text-xs uppercase font-medium border-b border-slate-100 text-slate-600;
+		@apply border-b border-slate-100 text-slate-600;
 	}
 	tbody tr {
 		@apply hover:bg-slate-100 w-full p-0;
@@ -103,10 +103,7 @@ body {
 		@apply text-xs text-red-500 ml-1;
 	}
 	.label-text {
-		@apply block text-xs font-medium leading-6 text-slate-500 first-letter:capitalize;
-	}
-	.label-text:hover {
-		@apply text-indigo-600;
+		@apply block text-xs font-medium leading-6 text-slate-500 first-letter:capitalize hover:text-indigo-700;
 	}
 	.small-text {
 		@apply mb-6 text-center text-base font-medium leading-6 text-slate-500 first-letter:capitalize;

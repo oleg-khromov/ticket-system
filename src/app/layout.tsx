@@ -1,5 +1,6 @@
 import React from 'react';
 import { Header, Footer } from '@/components';
+import { Toaster } from 'react-hot-toast';
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import './globals.css';
@@ -33,6 +34,7 @@ export default function RootLayout({
 				<Header />
 				<main>{children}</main>
 				<Footer />
+				<Toaster position="top-center" toastOptions={{ duration: 4000 }} />
 			</body>
 		</html>
 	);
