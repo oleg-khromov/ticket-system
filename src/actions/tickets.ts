@@ -5,6 +5,33 @@ import { getAuthUser } from '@/lib/getAuthUser';
 
 // import { redirect } from 'next/navigation';
 
+export async function getTicket(id: number) {
+	return await prisma.ticket.findUnique({
+		where: {
+			id,
+		},
+		include: {
+			createdByUser: {
+				select: {
+					firstName: true,
+					lastName: true,
+				},
+			},
+			assignedToUser: {
+				select: {
+					firstName: true,
+					lastName: true,
+				},
+			},
+			category: {
+				select: {
+					title: true,
+				},
+			},
+		},
+	});
+}
+
 export async function getTickets() {
 	return await prisma.ticket.findMany({
 		include: {
@@ -77,7 +104,6 @@ export async function addTicket(
 				title: 'Duplicate. This category already has a ticket with that title.',
 			},
 			...ticket,
-			message: 'HI',
 		};
 
 	const user = await getAuthUser();
@@ -98,5 +124,69 @@ export async function addTicket(
 
 	return {
 		message: 'New ticket has created successfully.',
+	};
+}
+
+export async function updateTicket(
+	state: AddUpdateTicketFormState | undefined,
+	formData: FormData,
+): Promise<AddUpdateTicketFormState | undefined> {
+	const ticket = {
+		categoryId: formData.get('categoryId') as string,
+		title: formData.get('title') as string,
+		content: formData.get('content') as string,
+	};
+
+	const validatedFields = AddTicketFormSchema.safeParse(ticket);
+	console.log(validatedFields);
+
+	if (!validatedFields.success)
+		return {
+			errors: validatedFields.error.flatten().fieldErrors,
+			...ticket,
+		};
+
+	const { categoryId } = validatedFields.data;
+
+	// const existingTicket = await prisma.ticket.findFirst({
+	// 	where: {
+	// 		title,
+	// 		categoryId: parseInt(categoryId),
+	// 	},
+	// 	select: {
+	// 		id: true,
+	// 	},
+	// });
+
+	// if (existingTicket)
+	// 	return {
+	// 		errors: {
+	// 			title: 'Duplicate. This category already has a ticket with that title.',
+	// 		},
+	// 		...ticket,
+	// 	};
+
+	const user = await getAuthUser();
+
+	const createdTicket = await prisma.ticket.update({
+		where: {
+			id: parseInt(formData.get('id') as string),
+		},
+		data: {
+			...ticket,
+			createdBy: parseInt(user?.userId as string),
+			categoryId: parseInt(categoryId),
+		},
+	});
+
+	if (!createdTicket)
+		return {
+			...ticket,
+			message: 'An error occurred while updating ticket.',
+		};
+
+	return {
+		...ticket,
+		message: 'Ticket has updated successfully.',
 	};
 }

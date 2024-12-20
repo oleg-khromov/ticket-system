@@ -159,7 +159,7 @@ export async function updateCategory(
 	if (!createdCategory)
 		return {
 			...category,
-			message: 'An error occurred while updating new category.',
+			message: 'An error occurred while updating category.',
 		};
 
 	return {

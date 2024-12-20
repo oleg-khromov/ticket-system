@@ -90,12 +90,12 @@ export default function Tickets() {
 							}) => {
 								return (
 									<tr key={id}>
+										<td>{id}</td>
 										<td>
 											<Link href={`${path}/${id}`} className="text-link">
-												{id}
+												{title}
 											</Link>
 										</td>
-										<td>{title}</td>
 										<td>{category.title}</td>
 										<td>{status}</td>
 										<td>

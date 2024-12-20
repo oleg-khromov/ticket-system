@@ -97,7 +97,7 @@ export default function EditUser() {
 								id="role"
 								name="role"
 								value={selectedRole}
-								onChange={(e) => setSelectedRole(e.target.value)}
+								onChange={(e) => setSelectedRole(e.target.value as Role)}
 								// defaultValue={
 								// 	state?.role === 'ADMIN' || user.role === 'ADMIN'
 								// 		? 'ADMIN'
