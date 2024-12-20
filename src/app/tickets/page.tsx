@@ -37,12 +37,12 @@ interface ITicket {
 	content: string;
 	status: Status;
 	createdBy: number;
-	assignedTo: number;
+	assignedTo: number | null;
 	categoryId: number;
 	createdAt: Date;
 	updatedAt: Date;
 	createdByUser: IUser;
-	assignedToUser: IUser;
+	assignedToUser: IUser | null;
 	category: ICategory;
 }
 
@@ -104,7 +104,7 @@ export default function Tickets() {
 										<td>{formatDate(createdAt)}</td>
 										<td>{formatDate(updatedAt)}</td>
 										<td>
-											{assignedToUser.firstName} {assignedToUser.lastName}
+											{assignedToUser?.firstName} {assignedToUser?.lastName}
 										</td>
 										<td>
 											<Link href={`${path}/${id}/edit`} className="text-link">

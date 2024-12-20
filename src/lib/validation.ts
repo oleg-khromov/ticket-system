@@ -107,3 +107,9 @@ export const UpdateUserFormSchema = z.object({
 	email: z.string().email({ message: 'Please enter a valid email.' }).trim(),
 	role: z.string().trim(),
 });
+
+export const AddTicketFormSchema = z.object({
+	categoryId: z.string().trim(),
+	title: z.string().min(3, { message: 'Minimum 3 characters.' }).trim(),
+	content: z.string().min(10, { message: 'Minimum 10 characters.' }).trim(),
+});
