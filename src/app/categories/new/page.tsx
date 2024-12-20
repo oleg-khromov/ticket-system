@@ -14,6 +14,11 @@ export default function AddCategory() {
 	return (
 		<div>
 			<h1 className="title">Add category</h1>
+			<div className="mb-10">
+				<Link href="/categories" className="text-link">
+					Back to all categories
+				</Link>
+			</div>
 			{state?.message ? (
 				<p className="text-center mb-6">{state.message}</p>
 			) : (
@@ -38,9 +43,6 @@ export default function AddCategory() {
 						<button disabled={isPending} className="btn-primary">
 							Add category
 						</button>
-						<Link href="/categories" className="text-link">
-							back to Categories
-						</Link>
 					</div>
 				</form>
 			</div>

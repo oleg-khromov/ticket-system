@@ -24,7 +24,7 @@ export default function EditCategory() {
 			};
 			fetchCategory();
 		}
-	}, [id]);
+	}, [id, isPending]);
 	return (
 		<div>
 			<h1 className="title">Edit category {category?.title}</h1>

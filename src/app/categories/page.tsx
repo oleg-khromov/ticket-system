@@ -44,10 +44,7 @@ export default function Categories() {
 										</Link>
 									</td>
 									<td>
-										<Link
-											href={`${path}/${id}/edit`}
-											className="bbl bwb text-link"
-										>
+										<Link href={`${path}/${id}/edit`} className="text-link">
 											<b>Edit</b>
 										</Link>
 									</td>

@@ -117,7 +117,6 @@ export async function updateCategory(
 		title: formData.get('title') as string,
 		currentTitle: formData.get('currentTitle') as string,
 	};
-	console.log(category);
 
 	const validatedFields = UpdateCategoryFormSchema.safeParse(category);
 	console.log(validatedFields);
@@ -160,7 +159,7 @@ export async function updateCategory(
 	if (!createdCategory)
 		return {
 			...category,
-			message: 'An error occurred while creating new category.',
+			message: 'An error occurred while updating new category.',
 		};
 
 	return {
