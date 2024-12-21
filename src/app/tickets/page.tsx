@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getTickets } from '@/actions/tickets';
+import { actionGetTickets } from '@/actions/tickets';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { formatDate } from '@/utils/formatters';
@@ -51,7 +51,7 @@ export default function Tickets() {
 	const [tickets, setTickets] = useState<ITicket[]>([]);
 	useEffect(() => {
 		const fetchTickets = async () => {
-			const fetchedTickets = await getTickets();
+			const fetchedTickets = await actionGetTickets();
 			setTickets(fetchedTickets);
 		};
 		fetchTickets();

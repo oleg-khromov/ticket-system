@@ -1,7 +1,7 @@
 'use client';
 import { useActionState, useEffect, useState } from 'react';
-import { addTicket } from '@/actions/tickets';
-import { getCategories } from '@/actions/categories';
+import { actionAddTicket } from '@/actions/tickets';
+import { actionGetCategories } from '@/actions/categories';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
@@ -11,11 +11,11 @@ interface ICategory {
 }
 
 export default function AddTicket() {
-	const [state, action, isPending] = useActionState(addTicket, undefined);
+	const [state, action, isPending] = useActionState(actionAddTicket, undefined);
 	const [categories, setCategories] = useState<ICategory[]>([]);
 	useEffect(() => {
 		const fetchCategories = async () => {
-			const fetchedCategories = await getCategories();
+			const fetchedCategories = await actionGetCategories();
 			setCategories(fetchedCategories);
 		};
 		fetchCategories();

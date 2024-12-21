@@ -1,15 +1,16 @@
 'use client';
 import { useEffect, useState } from 'react';
 import {
-	getTicket,
-	updateTicketStatus,
-	updateTicketAssignedTo,
+	actionGetTicket,
+	actionUpdateTicketStatus,
+	actionUpdateTicketAssignedTo,
 } from '@/actions/tickets';
-import { getUsersAdmin } from '@/actions/users';
+import { actionGetUsersByRole } from '@/actions/users';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { formatDate } from '@/utils/formatters';
 import toast from 'react-hot-toast';
+import { ROLE } from '@/types/interfaces';
 
 interface ICategory {
 	id?: number;
@@ -65,13 +66,13 @@ export default function Ticket() {
 	useEffect(() => {
 		if (id) {
 			const fetchTicket = async () => {
-				const fetchedTicket = await getTicket(parseInt(id));
+				const fetchedTicket = await actionGetTicket(parseInt(id));
 				console.log('fetchedTicket', fetchedTicket);
 				setTicket(fetchedTicket);
 			};
 			fetchTicket();
 			const fetchUsersAdmin = async () => {
-				const fetchedUserAdmins = await getUsersAdmin();
+				const fetchedUserAdmins = await actionGetUsersByRole(ROLE.ADMIN);
 				setAdmins(fetchedUserAdmins);
 			};
 			fetchUsersAdmin();
@@ -81,7 +82,7 @@ export default function Ticket() {
 	useEffect(() => {
 		if (selectedStatus) {
 			const updateTicket = async () => {
-				const updatedTicket = await updateTicketStatus(
+				const updatedTicket = await actionUpdateTicketStatus(
 					id,
 					selectedStatus as STATUS,
 				);
@@ -99,7 +100,7 @@ export default function Ticket() {
 	useEffect(() => {
 		if (selectedAssignedTo) {
 			const updateTicket = async () => {
-				const updatedTicket = await updateTicketAssignedTo(
+				const updatedTicket = await actionUpdateTicketAssignedTo(
 					id,
 					selectedAssignedTo,
 				);

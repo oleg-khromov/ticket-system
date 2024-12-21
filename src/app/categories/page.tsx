@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getCategories } from '@/actions/categories';
+import { actionGetCategories } from '@/actions/categories';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -14,7 +14,7 @@ export default function Categories() {
 	const [categories, setCategories] = useState<ICategory[]>([]);
 	useEffect(() => {
 		const fetchCategories = async () => {
-			const fetchedCategories = await getCategories();
+			const fetchedCategories = await actionGetCategories();
 			setCategories(fetchedCategories);
 		};
 		fetchCategories();

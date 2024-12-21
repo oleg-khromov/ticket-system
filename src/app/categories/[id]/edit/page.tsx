@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useActionState } from 'react';
-import { getCategory, updateCategory } from '@/actions/categories';
+import { actionGetCategory, actionUpdateCategory } from '@/actions/categories';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
@@ -14,12 +14,15 @@ interface ICategory {
 export default function EditCategory() {
 	const { id } = useParams<{ id: string }>();
 	const [category, setCategory] = useState<ICategory | null>(null);
-	const [state, action, isPending] = useActionState(updateCategory, undefined);
+	const [state, action, isPending] = useActionState(
+		actionUpdateCategory,
+		undefined,
+	);
 
 	useEffect(() => {
 		if (id) {
 			const fetchCategory = async () => {
-				const fetchedCategory = await getCategory(parseInt(id));
+				const fetchedCategory = await actionGetCategory(parseInt(id));
 				setCategory(fetchedCategory);
 			};
 			fetchCategory();

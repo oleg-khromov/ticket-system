@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState, useActionState } from 'react';
-import { getCategories } from '@/actions/categories';
-import { getTicket, updateTicket } from '@/actions/tickets';
+import { actionGetCategories } from '@/actions/categories';
+import { actionGetTicket, actionUpdateTicket } from '@/actions/tickets';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -46,17 +46,20 @@ export default function EditTicket() {
 	const [ticket, setTicket] = useState<ITicket | null>(null);
 	const [categories, setCategories] = useState<ICategory[]>([]);
 	const [selectedCategory, setSelectedCategory] = useState(1);
-	const [state, action, isPending] = useActionState(updateTicket, undefined);
+	const [state, action, isPending] = useActionState(
+		actionUpdateTicket,
+		undefined,
+	);
 
 	useEffect(() => {
 		if (id) {
 			const fetchTicket = async () => {
-				const fetchedTicket = await getTicket(parseInt(id));
+				const fetchedTicket = await actionGetTicket(parseInt(id));
 				setTicket(fetchedTicket);
 			};
 			fetchTicket();
 			const fetchCategories = async () => {
-				const fetchedCategories = await getCategories();
+				const fetchedCategories = await actionGetCategories();
 				setCategories(fetchedCategories);
 			};
 			fetchCategories();

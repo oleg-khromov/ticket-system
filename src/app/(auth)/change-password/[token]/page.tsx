@@ -1,12 +1,15 @@
 'use client';
 import { useActionState } from 'react';
-import { changePassword } from '@/actions/auth';
+import { actionChangePassword } from '@/actions/auth';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
 export default function ChangePassword() {
 	const { token } = useParams();
-	const [state, action, isPending] = useActionState(changePassword, undefined);
+	const [state, action, isPending] = useActionState(
+		actionChangePassword,
+		undefined,
+	);
 	return (
 		<div className="auth-page">
 			<div className="container w-1/2">

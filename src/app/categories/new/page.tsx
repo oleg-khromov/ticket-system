@@ -1,11 +1,14 @@
 'use client';
 import { useActionState, useEffect } from 'react';
-import { addCategory } from '@/actions/categories';
+import { actionAddCategory } from '@/actions/categories';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
 
 export default function AddCategory() {
-	const [state, action, isPending] = useActionState(addCategory, undefined);
+	const [state, action, isPending] = useActionState(
+		actionAddCategory,
+		undefined,
+	);
 
 	useEffect(() => {
 		if (state?.message) toast.success(state.message);

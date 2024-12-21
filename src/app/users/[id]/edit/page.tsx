@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState, useActionState } from 'react';
-import { getUser, updateUser } from '@/actions/users';
+import { actionGetUser, actionUpdateUser } from '@/actions/users';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 
@@ -25,13 +25,16 @@ interface IUser {
 export default function EditUser() {
 	const { id } = useParams<{ id: string }>();
 	const [user, setUser] = useState<IUser | null>(null);
-	const [state, action, isPending] = useActionState(updateUser, undefined);
+	const [state, action, isPending] = useActionState(
+		actionUpdateUser,
+		undefined,
+	);
 	const [selectedRole, setSelectedRole] = useState(state?.role || 'ADMIN');
 
 	useEffect(() => {
 		if (id) {
 			const fetchUser = async () => {
-				const fetchedUser = await getUser(parseInt(id));
+				const fetchedUser = await actionGetUser(parseInt(id));
 				setUser(fetchedUser);
 				setSelectedRole(fetchedUser?.role || 'ADMIN');
 			};

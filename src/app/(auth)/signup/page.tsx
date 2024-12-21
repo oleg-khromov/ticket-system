@@ -1,10 +1,10 @@
 'use client';
 import { useActionState } from 'react';
-import { signup } from '@/actions/auth';
+import { actionSignup } from '@/actions/auth';
 import Link from 'next/link';
 
 export default function SignUp() {
-	const [state, action, isPending] = useActionState(signup, undefined);
+	const [state, action, isPending] = useActionState(actionSignup, undefined);
 	return (
 		<div className="auth-page">
 			<div className="container w-1/2">

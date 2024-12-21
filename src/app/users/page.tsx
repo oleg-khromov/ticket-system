@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getUsers } from '@/actions/users';
+import { actionGetUsers } from '@/actions/users';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
@@ -23,7 +23,7 @@ export default function Users() {
 	const [users, setUsers] = useState<IUser[]>([]);
 	useEffect(() => {
 		const fetchUsers = async () => {
-			const fetchedUsers = await getUsers();
+			const fetchedUsers = await actionGetUsers();
 			setUsers(fetchedUsers);
 		};
 		fetchUsers();

@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getUser, deleteUser } from '@/actions/users';
+import { actionGetUser, actionDeleteUser } from '@/actions/users';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import toast from 'react-hot-toast';
@@ -37,7 +37,7 @@ export default function User() {
 	useEffect(() => {
 		if (id) {
 			const fetchUser = async () => {
-				const fetchedUser = await getUser(parseInt(id));
+				const fetchedUser = await actionGetUser(parseInt(id));
 				setUser(fetchedUser);
 			};
 			fetchUser();
@@ -45,7 +45,7 @@ export default function User() {
 	}, [id]);
 
 	const handleDelete = async () => {
-		const result = await deleteUser(parseInt(id));
+		const result = await actionDeleteUser(parseInt(id));
 		if (result?.success) {
 			toast.success(result.success);
 			router.push('/users');

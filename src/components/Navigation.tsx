@@ -1,5 +1,5 @@
 import { NavLink } from '@/components';
-import { logout } from '@/actions/auth';
+import { actionLogout } from '@/actions/auth';
 import { getAuthUser } from '@/lib/getAuthUser';
 
 export default async function Navigation() {
@@ -13,7 +13,7 @@ export default async function Navigation() {
 						<NavLink label="Categories" href="/categories" />
 						<NavLink label="Tickets" href="/tickets" />
 						<NavLink label="Users" href="/users" />
-						<form action={logout}>
+						<form action={actionLogout}>
 							<button className="nav-link">Logout</button>
 						</form>
 					</>

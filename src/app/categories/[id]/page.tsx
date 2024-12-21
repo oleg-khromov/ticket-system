@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getCategory, deleteCategory } from '@/actions/categories';
+import { actionGetCategory, actionDeleteCategory } from '@/actions/categories';
 import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { formatDate } from '@/utils/formatters';
@@ -26,7 +26,7 @@ export default function Category() {
 	useEffect(() => {
 		if (id) {
 			const fetchCategory = async () => {
-				const fetchedCategory = await getCategory(parseInt(id));
+				const fetchedCategory = await actionGetCategory(parseInt(id));
 				setCategory(fetchedCategory);
 			};
 			fetchCategory();
@@ -34,7 +34,7 @@ export default function Category() {
 	}, [id]);
 
 	const handleDelete = async () => {
-		const result = await deleteCategory(parseInt(id));
+		const result = await actionDeleteCategory(parseInt(id));
 		if (result?.success) {
 			toast.success(result.success);
 			router.push('/categories');

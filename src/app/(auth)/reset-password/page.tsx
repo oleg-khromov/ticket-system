@@ -1,10 +1,13 @@
 'use client';
 import { useActionState } from 'react';
-import { resetPassword } from '@/actions/auth';
+import { actionResetPassword } from '@/actions/auth';
 import Link from 'next/link';
 
 export default function ResetPassword() {
-	const [state, action, isPending] = useActionState(resetPassword, undefined);
+	const [state, action, isPending] = useActionState(
+		actionResetPassword,
+		undefined,
+	);
 	return (
 		<div className="auth-page">
 			<div className="container w-1/2">
