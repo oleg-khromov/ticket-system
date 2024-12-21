@@ -168,7 +168,7 @@ export async function updateTicket(
 
 	const user = await getAuthUser();
 
-	const createdTicket = await prisma.ticket.update({
+	const updatedTicket = await prisma.ticket.update({
 		where: {
 			id: parseInt(formData.get('id') as string),
 		},
@@ -179,7 +179,7 @@ export async function updateTicket(
 		},
 	});
 
-	if (!createdTicket)
+	if (!updatedTicket)
 		return {
 			...ticket,
 			message: 'An error occurred while updating ticket.',
@@ -187,6 +187,55 @@ export async function updateTicket(
 
 	return {
 		...ticket,
+		message: 'Ticket has updated successfully.',
+	};
+}
+
+// enum STATUS {
+// 	Pending = 'Pending',
+// 	InProgress = 'InProgress',
+// 	Resolved = 'Resolved',
+// }
+type STATUS = 'Pending' | 'InProgress' | 'Resolved';
+
+export async function updateTicketStatus(id: string, status: STATUS) {
+	const updatedTicket = await prisma.ticket.update({
+		where: {
+			id: parseInt(id),
+		},
+		data: {
+			status,
+		},
+	});
+
+	if (!updatedTicket)
+		return {
+			message: 'An error occurred while updating ticket.',
+		};
+
+	return {
+		result: updatedTicket,
+		message: 'Ticket has updated successfully.',
+	};
+}
+
+export async function updateTicketAssignedTo(id: string, assignedTo: number) {
+	const updatedTicket = await prisma.ticket.update({
+		where: {
+			id: parseInt(id),
+		},
+		data: {
+			assignedTo,
+		},
+	});
+
+	if (!updatedTicket)
+		return {
+			message: 'An error occurred while updating ticket.',
+		};
+
+	return {
+		result: updatedTicket,
 		message: 'Ticket has updated successfully.',
 	};
 }

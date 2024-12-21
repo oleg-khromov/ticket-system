@@ -23,6 +23,27 @@ export async function getUsers() {
 	});
 }
 
+export async function getUsersAdmin() {
+	return await prisma.user.findMany({
+		where: {
+			role: 'ADMIN',
+		},
+		select: {
+			id: true,
+			firstName: true,
+			lastName: true,
+		},
+		orderBy: [
+			{
+				firstName: 'asc',
+			},
+			{
+				lastName: 'asc',
+			},
+		],
+	});
+}
+
 export async function getUser(id: number) {
 	return await prisma.user.findUnique({
 		select: {

@@ -88,7 +88,7 @@ export default function EditTicket() {
 							<select
 								id="categoryId"
 								name="categoryId"
-								value={selectedCategory || ticket.category.title}
+								value={selectedCategory || ticket.categoryId}
 								onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
 							>
 								{categories?.map(({ id, title }) => (
