@@ -7,58 +7,46 @@ import {
 	updateTicketAssignedTo,
 } from '@/queries';
 import { StatusType } from '@/types/interfaces';
-
-export interface UpdateTicketFormState {
-	errors?: Record<string, string | string[]>;
-	message?: string;
-	title?: string;
-	content?: string;
-	categoryId?: string;
-}
+import { IActionFormState } from '@/types/interfaces';
+import { validateForm } from '@/utils/utils';
 
 export async function actionUpdateTicket(
-	state: UpdateTicketFormState | undefined,
+	state: IActionFormState | undefined,
 	formData: FormData,
-): Promise<UpdateTicketFormState | undefined> {
-	const ticket = {
-		categoryId: formData.get('categoryId') as string,
-		title: formData.get('title') as string,
-		content: formData.get('content') as string,
-	};
+): Promise<IActionFormState | undefined> {
+	const validatedForm = validateForm(formData, AddTicketFormSchema);
+	if (!validatedForm.success) return validatedForm;
 
-	const validatedFields = AddTicketFormSchema.safeParse(ticket);
-	console.log(validatedFields);
+	const { data } = validatedForm;
+	const { categoryId } = data;
 
-	if (!validatedFields.success)
-		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-			...ticket,
-		};
-
-	const { categoryId } = validatedFields.data;
 	const id = formData.get('id') as string;
 
 	const user = await getAuthUser();
 
 	const updatedTicket = await updateTicket(parseInt(id), {
-		...ticket,
+		...data,
 		createdBy: parseInt(user?.userId as string),
 		categoryId: parseInt(categoryId),
 	});
 
 	if (!updatedTicket)
 		return {
-			...ticket,
+			data,
 			message: 'An error occurred while updating ticket.',
 		};
 
 	return {
-		...ticket,
+		data,
 		message: 'Ticket has updated successfully.',
+		success: true,
 	};
 }
 
-export async function actionUpdateTicketStatus(id: string, status: StatusType) {
+export async function actionUpdateTicketStatus(
+	id: string,
+	status: StatusType,
+): Promise<IActionFormState | undefined> {
 	const updatedTicket = await updateTicketStatus(parseInt(id), status);
 
 	if (!updatedTicket)
@@ -67,15 +55,15 @@ export async function actionUpdateTicketStatus(id: string, status: StatusType) {
 		};
 
 	return {
-		result: updatedTicket,
 		message: 'Ticket has updated successfully.',
+		success: true,
 	};
 }
 
 export async function actionUpdateTicketAssignedTo(
 	id: string,
 	assignedTo: number,
-) {
+): Promise<IActionFormState | undefined> {
 	const updatedTicket = await updateTicketAssignedTo(parseInt(id), assignedTo);
 
 	if (!updatedTicket)
@@ -84,7 +72,7 @@ export async function actionUpdateTicketAssignedTo(
 		};
 
 	return {
-		result: updatedTicket,
 		message: 'Ticket has updated successfully.',
+		success: true,
 	};
 }

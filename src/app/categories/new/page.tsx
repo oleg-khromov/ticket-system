@@ -3,6 +3,9 @@ import { useActionState, useEffect } from 'react';
 import { actionAddCategory } from '@/actions/categories';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { routes } from '@/utils/constants';
+import { Button } from '@/components/ui';
+import { FormInputBox } from '@/components/';
 
 export default function AddCategory() {
 	const [state, action, isPending] = useActionState(
@@ -18,7 +21,7 @@ export default function AddCategory() {
 		<div>
 			<h1 className="title">Add category</h1>
 			<div className="mb-10">
-				<Link href="/categories" className="text-link">
+				<Link href={routes.CATEGORIES} className="text-link">
 					Back to all categories
 				</Link>
 			</div>
@@ -29,7 +32,14 @@ export default function AddCategory() {
 			)}
 			<div className="container w-3/4">
 				<form action={action} autoComplete="off" className="space-y-4">
-					<div>
+					<FormInputBox
+						id="title"
+						name="title"
+						labelText="Title"
+						defaultValue={state?.data?.title ?? ''}
+						errors={state?.errors?.title}
+					/>
+					{/* <div>
 						<label htmlFor="title">Title</label>
 						<input
 							id="title"
@@ -41,11 +51,9 @@ export default function AddCategory() {
 						{state?.errors?.title && (
 							<p className="error">{state.errors.title}</p>
 						)}
-					</div>
+					</div> */}
 					<div className="flex items-end gap-4">
-						<button disabled={isPending} className="btn-primary">
-							Add category
-						</button>
+						<Button text="Add category" disabled={isPending} />
 					</div>
 				</form>
 			</div>

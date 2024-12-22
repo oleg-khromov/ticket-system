@@ -2,35 +2,18 @@
 import { AddTicketFormSchema } from '@/schemas';
 import { getAuthUser } from '@/lib/getAuthUser';
 import { createTicket, getTicketByTitleAndCategoryId } from '@/queries';
-
-export interface AddTicketFormState {
-	errors?: Record<string, string | string[]>;
-	message?: string;
-	title?: string;
-	content?: string;
-	categoryId?: string;
-}
+import { IActionFormState } from '@/types/interfaces';
+import { validateForm } from '@/utils/utils';
 
 export async function actionAddTicket(
-	state: AddTicketFormState | undefined,
+	state: IActionFormState | undefined,
 	formData: FormData,
-): Promise<AddTicketFormState | undefined> {
-	const ticket = {
-		categoryId: formData.get('categoryId') as string,
-		title: formData.get('title') as string,
-		content: formData.get('content') as string,
-	};
-	console.log(ticket, 'ticket');
+): Promise<IActionFormState | undefined> {
+	const validatedForm = validateForm(formData, AddTicketFormSchema);
+	if (!validatedForm.success) return validatedForm;
 
-	const validatedFields = AddTicketFormSchema.safeParse(ticket);
-
-	if (!validatedFields.success)
-		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-			...ticket,
-		};
-
-	const { categoryId, title } = validatedFields.data;
+	const { data } = validatedForm;
+	const { categoryId, title } = data;
 
 	const existingTicket = await getTicketByTitleAndCategoryId(
 		title,
@@ -42,14 +25,14 @@ export async function actionAddTicket(
 			errors: {
 				title: 'Duplicate. This category already has a ticket with that title.',
 			},
-			...ticket,
+			data,
 		};
 
 	const user = await getAuthUser();
 	console.log(user, 'user');
 
 	const createdTicket = await createTicket({
-		...ticket,
+		...data,
 		createdBy: parseInt(user?.userId as string),
 		categoryId: parseInt(categoryId),
 	});
@@ -61,5 +44,6 @@ export async function actionAddTicket(
 
 	return {
 		message: 'New ticket has created successfully.',
+		success: true,
 	};
 }

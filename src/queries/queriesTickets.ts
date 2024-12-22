@@ -7,23 +7,9 @@ export async function getTicketById(id: number) {
 			id,
 		},
 		include: {
-			createdByUser: {
-				select: {
-					firstName: true,
-					lastName: true,
-				},
-			},
-			assignedToUser: {
-				select: {
-					firstName: true,
-					lastName: true,
-				},
-			},
-			category: {
-				select: {
-					title: true,
-				},
-			},
+			createdByUser: {},
+			assignedToUser: {},
+			category: {},
 		},
 	});
 }
@@ -57,23 +43,9 @@ export async function getTicketByTitleAndCategoryId(
 export async function getTickets() {
 	return await prisma.ticket.findMany({
 		include: {
-			createdByUser: {
-				select: {
-					firstName: true,
-					lastName: true,
-				},
-			},
-			assignedToUser: {
-				select: {
-					firstName: true,
-					lastName: true,
-				},
-			},
-			category: {
-				select: {
-					title: true,
-				},
-			},
+			createdByUser: {},
+			assignedToUser: {},
+			category: {},
 		},
 		orderBy: {
 			createdAt: 'asc',

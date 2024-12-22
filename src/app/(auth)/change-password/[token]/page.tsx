@@ -3,6 +3,9 @@ import { useActionState } from 'react';
 import { actionChangePassword } from '@/actions/auth';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
+import { routes } from '@/utils/constants';
+import { Button } from '@/components/ui';
+import { FormInputBox } from '@/components/';
 
 export default function ChangePassword() {
 	const { token } = useParams();
@@ -20,7 +23,7 @@ export default function ChangePassword() {
 							Password has been changed successfully.
 						</p>
 						<p className="small-text">
-							<Link href="/signin" className="text-link">
+							<Link href={routes.SIGNIN} className="text-link">
 								Back to Sign In
 							</Link>
 						</p>
@@ -34,7 +37,15 @@ export default function ChangePassword() {
 						{state?.message ? <p className="error">{state.message}</p> : ''}
 						<form action={action} autoComplete="off" className="space-y-4">
 							<input type="hidden" name="token" value={token || ''} />
-							<div>
+							<FormInputBox
+								id="password"
+								name="password"
+								type="password"
+								labelText="Password"
+								errors={state?.errors?.password}
+								mandatory={true}
+							/>
+							{/* <div>
 								<label htmlFor="password">
 									Password<span className="mandatory">*</span>
 								</label>
@@ -57,8 +68,16 @@ export default function ChangePassword() {
 									) : (
 										<p className="error">{state.errors.password}</p>
 									))}
-							</div>
-							<div>
+							</div> */}
+							<FormInputBox
+								id="confirmPassword"
+								name="confirmPassword"
+								type="password"
+								labelText="Confirm Password"
+								errors={state?.errors?.confirmPassword}
+								mandatory={true}
+							/>
+							{/* <div>
 								<label htmlFor="confirmPassword">
 									Confirm Password<span className="mandatory">*</span>
 								</label>
@@ -71,12 +90,10 @@ export default function ChangePassword() {
 								{state?.errors?.confirmPassword && (
 									<p className="error">{state.errors.confirmPassword}</p>
 								)}
-							</div>
+							</div> */}
 							<div className="flex items-end gap-4">
-								<button disabled={isPending} className="btn-primary">
-									Change password
-								</button>
-								<Link href="/signin" className="text-link">
+								<Button text="Change password" disabled={isPending} />
+								<Link href={routes.SIGNUP} className="text-link">
 									or back to Sign In
 								</Link>
 							</div>

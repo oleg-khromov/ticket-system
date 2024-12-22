@@ -3,13 +3,10 @@ import { useEffect, useState, useActionState } from 'react';
 import { actionGetCategory, actionUpdateCategory } from '@/actions/categories';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-
-interface ICategory {
-	id: number;
-	title: string;
-	createdAt: Date;
-	updatedAt: Date;
-}
+import { routes } from '@/utils/constants';
+import { Button } from '@/components/ui';
+import { FormInputBox } from '@/components/';
+import { ICategory } from '@/types/interfaces';
 
 export default function EditCategory() {
 	const { id } = useParams<{ id: string }>();
@@ -32,7 +29,7 @@ export default function EditCategory() {
 		<div>
 			<h1 className="title">Edit category {category?.title}</h1>
 			<div className="mb-10">
-				<Link href="/categories" className="text-link">
+				<Link href={routes.CATEGORIES} className="text-link">
 					Back to all categories
 				</Link>
 			</div>
@@ -41,7 +38,14 @@ export default function EditCategory() {
 					<form action={action} autoComplete="off" className="space-y-4">
 						<input type="hidden" name="id" value={id} />
 						<input type="hidden" name="currentTitle" value={category.title} />
-						<div>
+						<FormInputBox
+							id="title"
+							name="title"
+							labelText="Title"
+							defaultValue={(state?.data?.title || category.title) ?? ''}
+							errors={state?.errors?.title}
+						/>
+						{/* <div>
 							<label htmlFor="title">Title</label>
 							<input
 								id="title"
@@ -53,11 +57,9 @@ export default function EditCategory() {
 							{state?.errors?.title && (
 								<p className="error">{state.errors.title}</p>
 							)}
-						</div>
+						</div> */}
 						<div className="flex items-end gap-4">
-							<button disabled={isPending} className="btn-primary">
-								Edit category
-							</button>
+							<Button text="Edit category" disabled={isPending} />
 						</div>
 					</form>
 				</div>

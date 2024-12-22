@@ -1,43 +1,29 @@
 'use server';
 import { AddCategoryFormSchema } from '@/schemas';
 import { getCategoryByTitle, createCategory } from '@/queries';
-
-export interface AddCategoryFormState {
-	errors?: Record<string, string | string[]>;
-	message?: string;
-	title?: string;
-}
+import { IActionFormState } from '@/types/interfaces';
+import { validateForm } from '@/utils/utils';
 
 export async function actionAddCategory(
-	state: AddCategoryFormState | undefined,
+	state: IActionFormState | undefined,
 	formData: FormData,
-): Promise<AddCategoryFormState | undefined> {
-	const category = {
-		title: formData.get('title') as string,
-	};
+): Promise<IActionFormState | undefined> {
+	const validatedForm = validateForm(formData, AddCategoryFormSchema);
+	if (!validatedForm.success) return validatedForm;
 
-	const validatedFields = AddCategoryFormSchema.safeParse(category);
+	const { data } = validatedForm;
 
-	if (!validatedFields.success)
-		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-			...category,
-		};
-
-	const { title } = validatedFields.data;
-
-	const existingCategory = await getCategoryByTitle(title);
+	const existingCategory = await getCategoryByTitle(data.title);
 
 	if (existingCategory)
 		return {
 			errors: {
 				title: 'This category already exist in the system.',
 			},
-			...category,
-			message: 'HI',
+			data,
 		};
 
-	const createdCategory = await createCategory(category);
+	const createdCategory = await createCategory(data);
 
 	if (!createdCategory)
 		return {
@@ -46,5 +32,6 @@ export async function actionAddCategory(
 
 	return {
 		message: 'New category has added successfully.',
+		success: true,
 	};
 }

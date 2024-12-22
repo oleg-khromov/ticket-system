@@ -1,19 +1,15 @@
 import prisma from '@/lib/db';
-import { IUser } from '@/types/interfaces';
-import { STATUS, RoleType, IUserWithouPassword } from '@/types/interfaces';
+import {
+	TICKET_STATUS,
+	RoleType,
+	IUser,
+	IUserWithPassword,
+} from '@/types/interfaces';
 
 export async function getUserById(id: number) {
 	return await prisma.user.findUnique({
 		where: {
 			id,
-		},
-		select: {
-			id: true,
-			firstName: true,
-			lastName: true,
-			email: true,
-			role: true,
-			phoneNumber: true,
 		},
 	});
 }
@@ -49,11 +45,11 @@ export async function getUserWithUnresolvedTickets(assignedTo: number) {
 			OR: [
 				{
 					assignedTo,
-					status: STATUS.Pending,
+					status: TICKET_STATUS.Pending,
 				},
 				{
 					assignedTo,
-					status: STATUS.InProgress,
+					status: TICKET_STATUS.InProgress,
 				},
 			],
 		},
@@ -62,14 +58,6 @@ export async function getUserWithUnresolvedTickets(assignedTo: number) {
 
 export async function getUsers() {
 	return await prisma.user.findMany({
-		select: {
-			id: true,
-			firstName: true,
-			lastName: true,
-			email: true,
-			role: true,
-			phoneNumber: true,
-		},
 		orderBy: [
 			{
 				firstName: 'asc',
@@ -85,11 +73,6 @@ export async function getUsersByRole(role: RoleType) {
 	return await prisma.user.findMany({
 		where: {
 			role,
-		},
-		select: {
-			id: true,
-			firstName: true,
-			lastName: true,
 		},
 		orderBy: [
 			{
@@ -116,13 +99,13 @@ export async function getUsersByEmailAndExcludeById(id: number, email: string) {
 	});
 }
 
-export async function createUser(data: IUser) {
+export async function createUser(data: IUserWithPassword) {
 	return await prisma.user.create({
 		data,
 	});
 }
 
-export async function updateUser(id: number, data: IUserWithouPassword) {
+export async function updateUser(id: number, data: IUser) {
 	return await prisma.user.update({
 		where: { id },
 		data,

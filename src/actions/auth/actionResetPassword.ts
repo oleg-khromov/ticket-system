@@ -3,30 +3,18 @@ import { ResetPasswordFormSchema } from '@/schemas';
 import { createToken } from '@/lib/token';
 import { sendResetPasswordEmail } from '@/utils/email';
 import { getUserByEmail, createPasswordResetToken } from '@/queries';
-
-export interface ResetPasswordFormState {
-	errors?: Record<string, string | string[]>;
-	message?: string;
-	email?: string;
-	success?: boolean;
-}
+import { IActionFormState } from '@/types/interfaces';
+import { validateForm } from '@/utils/utils';
 
 export async function actionResetPassword(
-	state: ResetPasswordFormState | undefined,
+	state: IActionFormState | undefined,
 	formData: FormData,
-): Promise<ResetPasswordFormState | undefined> {
-	const validatedFields = ResetPasswordFormSchema.safeParse({
-		email: formData.get('email') as string,
-	});
+): Promise<IActionFormState | undefined> {
+	const validatedForm = validateForm(formData, ResetPasswordFormSchema);
+	if (!validatedForm.success) return validatedForm;
 
-	if (!validatedFields.success) {
-		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-			email: formData.get('email') as string,
-		};
-	}
-
-	const { email } = validatedFields.data;
+	const { data } = validatedForm;
+	const { email } = data;
 
 	const existingUser = await getUserByEmail(email);
 
@@ -35,7 +23,7 @@ export async function actionResetPassword(
 			errors: {
 				email: "This email doesn't exist in the system.",
 			},
-			email,
+			data,
 		};
 	}
 
@@ -61,6 +49,7 @@ export async function actionResetPassword(
 		};
 	else
 		return {
+			message: 'The email to change password was sent successfully.',
 			success: true,
 		};
 }

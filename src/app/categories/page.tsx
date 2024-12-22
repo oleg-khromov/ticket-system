@@ -3,11 +3,8 @@ import { useEffect, useState } from 'react';
 import { actionGetCategories } from '@/actions/categories';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-interface ICategory {
-	id: number;
-	title: string;
-}
+import { routes } from '@/utils/constants';
+import { ICategory } from '@/types/interfaces';
 
 export default function Categories() {
 	const path = usePathname();
@@ -44,7 +41,10 @@ export default function Categories() {
 										</Link>
 									</td>
 									<td>
-										<Link href={`${path}/${id}/edit`} className="text-link">
+										<Link
+											href={`${path}/${id}${routes.EDIT}`}
+											className="text-link"
+										>
 											<b>Edit</b>
 										</Link>
 									</td>
@@ -57,7 +57,7 @@ export default function Categories() {
 				<p className="text-center mb-6">Add your first category.</p>
 			)}
 			<p className="text-center">
-				<Link href={`${path}/new`} className="btn-primary">
+				<Link href={`${path}${routes.NEW}`} className="btn-primary">
 					Add category
 				</Link>
 			</p>

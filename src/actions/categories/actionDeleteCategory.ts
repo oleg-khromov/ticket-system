@@ -1,21 +1,22 @@
 'use server';
 import { deleteCategory, getTicketByCategoryId } from '@/queries';
+import { IActionFormState } from '@/types/interfaces';
 
 export async function actionDeleteCategory(
 	id: number,
-): Promise<{ errors?: string; success?: string } | undefined> {
-	console.log(id, 33333);
+): Promise<IActionFormState | undefined> {
 	const existingTickets = await getTicketByCategoryId(id);
 
 	if (existingTickets)
 		return {
-			errors: 'This category has tickets.',
+			message: 'This category has tickets.',
 		};
 
 	const deletedCategory = await deleteCategory(id);
 
 	if (deletedCategory)
 		return {
-			success: `Category ${deletedCategory.title} has deleted successfully`,
+			message: `Category ${deletedCategory.title} has deleted successfully`,
+			success: true,
 		};
 }

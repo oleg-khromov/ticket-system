@@ -1,43 +1,19 @@
 'use server';
 import { UpdateUserFormSchema } from '@/schemas';
 import { updateUser, getUsersByEmailAndExcludeById } from '@/queries';
-import { RoleType } from '@/types/interfaces';
-
-export interface AddUpdateUserFormState {
-	errors?: Record<string, string | string[]>;
-	message?: string;
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	role?: RoleType;
-	phoneNumber?: string;
-}
+import { USER_ROLE } from '@/types/interfaces';
+import { IActionFormState } from '@/types/interfaces';
+import { validateForm } from '@/utils/utils';
 
 export async function actionUpdateUser(
-	state: AddUpdateUserFormState | undefined,
+	state: IActionFormState | undefined,
 	formData: FormData,
-): Promise<AddUpdateUserFormState | undefined> {
-	const user = {
-		id: formData.get('id') as string,
-		firstName: formData.get('firstName') as string,
-		lastName: formData.get('lastName') as string,
-		email: formData.get('email') as string,
-		role: formData.get('role') as RoleType,
-		phoneNumber: formData.get('phoneNumber') as string,
-	};
-	console.log(user);
+): Promise<IActionFormState | undefined> {
+	const validatedForm = validateForm(formData, UpdateUserFormSchema);
+	if (!validatedForm.success) return validatedForm;
 
-	const validatedFields = UpdateUserFormSchema.safeParse(user);
-	console.log(validatedFields);
-
-	if (!validatedFields.success)
-		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-			...user,
-		};
-
-	const { id, firstName, lastName, email, role, phoneNumber } =
-		validatedFields.data;
+	const { data } = validatedForm;
+	const { id, firstName, lastName, email, role, phoneNumber } = data;
 
 	const existingUsers = await getUsersByEmailAndExcludeById(
 		parseInt(id),
@@ -49,25 +25,26 @@ export async function actionUpdateUser(
 			errors: {
 				email: 'A user with that email already exist in the system.',
 			},
-			...user,
+			data,
 		};
 
 	const updatedUser = await updateUser(parseInt(id), {
 		firstName,
 		lastName,
 		email,
-		role: role === 'ADMIN' ? 'ADMIN' : 'USER',
+		role: role === USER_ROLE.ADMIN ? USER_ROLE.ADMIN : USER_ROLE.USER,
 		phoneNumber,
 	});
 
 	if (!updatedUser)
 		return {
-			...user,
+			data,
 			message: 'An error occurred while updating user.',
 		};
 
 	return {
-		...user,
+		data,
 		message: 'User has updated successfully.',
+		success: true,
 	};
 }

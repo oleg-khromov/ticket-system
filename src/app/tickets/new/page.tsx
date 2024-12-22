@@ -4,11 +4,10 @@ import { actionAddTicket } from '@/actions/tickets';
 import { actionGetCategories } from '@/actions/categories';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
-
-interface ICategory {
-	id: number;
-	title: string;
-}
+import { routes } from '@/utils/constants';
+import { Button } from '@/components/ui';
+import { FormInputBox } from '@/components/';
+import { ICategory } from '@/types/interfaces';
 
 export default function AddTicket() {
 	const [state, action, isPending] = useActionState(actionAddTicket, undefined);
@@ -30,7 +29,7 @@ export default function AddTicket() {
 		<div>
 			<h1 className="title">Add ticket</h1>
 			<div className="mb-10">
-				<Link href="/tickets" className="text-link">
+				<Link href={routes.TICKETS} className="text-link">
 					Back to all tickets
 				</Link>
 			</div>
@@ -41,6 +40,13 @@ export default function AddTicket() {
 			)}
 			<div className="container w-3/4">
 				<form action={action} autoComplete="off" className="space-y-4">
+					{/* <FormInputBox
+						id="categoryId"
+						name="categoryId"
+						labelText="Category"
+						value={selectedCategory}
+						errors={state?.errors?.category}
+					/> */}
 					<div>
 						<label htmlFor="categoryId">Category</label>
 						<select
@@ -59,7 +65,14 @@ export default function AddTicket() {
 							<p className="error">{state.errors.category}</p>
 						)}
 					</div>
-					<div>
+					<FormInputBox
+						id="title"
+						name="title"
+						labelText="Title"
+						defaultValue={state?.data?.title ?? ''}
+						errors={state?.errors?.title}
+					/>
+					{/* <div>
 						<label htmlFor="title">Title</label>
 						<input
 							id="title"
@@ -71,23 +84,28 @@ export default function AddTicket() {
 						{state?.errors?.title && (
 							<p className="error">{state.errors.title}</p>
 						)}
-					</div>
+					</div> */}
+					{/* <FormInputBox
+						id="content"
+						name="content"
+						labelText="Content"
+						defaultValue={state?.content ?? ''}
+						errors={state?.errors?.content}
+					/> */}
 					<div>
 						<label htmlFor="content">Content</label>
 						<textarea
 							id="content"
 							name="content"
 							autoComplete="off"
-							defaultValue={state?.content ?? ''}
+							defaultValue={state?.data?.content ?? ''}
 						/>
 						{state?.errors?.content && (
 							<p className="error">{state.errors.content}</p>
 						)}
 					</div>
 					<div className="flex items-end gap-4">
-						<button disabled={isPending} className="btn-primary">
-							Add ticket
-						</button>
+						<Button text="Add ticket" disabled={isPending} />
 					</div>
 				</form>
 			</div>

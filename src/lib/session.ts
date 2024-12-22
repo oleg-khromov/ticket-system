@@ -2,6 +2,7 @@
 import { jwtVerify, SignJWT } from 'jose';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { routes } from '@/utils/constants';
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
@@ -81,7 +82,7 @@ export async function verifySession() {
 	const payload = await decrypt(session);
 
 	if (!payload?.userId) {
-		redirect('/signin');
+		redirect(routes.SIGNIN);
 	}
 
 	return { userId: payload?.userId };

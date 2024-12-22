@@ -7,30 +7,20 @@ import {
 	getPasswordResetToken,
 	deletePasswordResetToken,
 } from '@/queries';
-
-export interface ChangePasswordFormState {
-	errors?: Record<string, string | string[]>;
-	message?: string;
-	success?: boolean;
-}
+import { IActionFormState } from '@/types/interfaces';
+import { validateForm } from '@/utils/utils';
 
 export async function actionChangePassword(
-	state: ChangePasswordFormState | undefined,
+	state: IActionFormState | undefined,
 	formData: FormData,
-): Promise<ChangePasswordFormState | undefined> {
-	const validatedFields = ChangePasswordFormSchema.safeParse({
-		password: formData.get('password') as string,
-		confirmPassword: formData.get('confirmPassword') as string,
-	});
+): Promise<IActionFormState | undefined> {
+	const validatedForm = validateForm(formData, ChangePasswordFormSchema);
+	if (!validatedForm.success) return validatedForm;
 
-	if (!validatedFields.success) {
-		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-		};
-	}
+	const { data } = validatedForm;
+	const { password } = data;
 
 	const token = formData.get('token') as string;
-	const { password } = validatedFields.data;
 
 	if (!token)
 		return {
@@ -67,6 +57,7 @@ export async function actionChangePassword(
 	await deletePasswordResetToken(userId, token);
 
 	return {
+		message: 'Password has changed successfully.',
 		success: true,
 	};
 }

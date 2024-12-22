@@ -1,33 +1,17 @@
 'use server';
 import { UpdateCategoryFormSchema } from '@/schemas';
 import { getCategoryByTitle, updateCategory } from '@/queries';
-
-export interface UpdateCategoryFormState {
-	errors?: Record<string, string | string[]>;
-	message?: string;
-	title?: string;
-}
+import { IActionFormState } from '@/types/interfaces';
+import { validateForm } from '@/utils/utils';
 
 export async function actionUpdateCategory(
-	state: UpdateCategoryFormState | undefined,
+	state: IActionFormState | undefined,
 	formData: FormData,
-): Promise<UpdateCategoryFormState | undefined> {
-	const category = {
-		id: formData.get('id') as string,
-		title: formData.get('title') as string,
-		currentTitle: formData.get('currentTitle') as string,
-	};
-
-	const validatedFields = UpdateCategoryFormSchema.safeParse(category);
-	console.log(validatedFields);
-
-	if (!validatedFields.success)
-		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-			...category,
-		};
-
-	const { id, title } = validatedFields.data;
+): Promise<IActionFormState | undefined> {
+	const validatedForm = validateForm(formData, UpdateCategoryFormSchema);
+	if (!validatedForm.success) return validatedForm;
+	const { data } = validatedForm;
+	const { id, title } = data;
 
 	const existingCategory = await getCategoryByTitle(title);
 
@@ -36,19 +20,20 @@ export async function actionUpdateCategory(
 			errors: {
 				title: 'A category with that title already exist in the system.',
 			},
-			...category,
+			data,
 		};
 
 	const updatedCategory = await updateCategory(parseInt(id), { title });
 
 	if (!updatedCategory)
 		return {
-			...category,
+			data,
 			message: 'An error occurred while updating category.',
 		};
 
 	return {
-		...category,
+		data,
 		message: 'Category title has updated successfully.',
+		success: true,
 	};
 }

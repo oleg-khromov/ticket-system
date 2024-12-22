@@ -5,45 +5,21 @@ import { createSession } from '@/lib/session';
 import { sendConfirmationEmail } from '@/utils/email';
 import { redirect } from 'next/navigation';
 import { createUser, getUserByEmail } from '@/queries';
-
-export interface SignUpFormState {
-	errors?: Record<string, string | string[]>;
-	message?: string;
-	firstName?: string;
-	lastName?: string;
-	phoneNumber?: string;
-	email?: string;
-	password?: string;
-	confirmPassword?: string;
-}
+import { routes } from '@/utils/constants';
+import { IActionFormState } from '@/types/interfaces';
+import { validateForm } from '@/utils/utils';
 
 export async function actionSignup(
-	state: SignUpFormState | undefined,
+	state: IActionFormState | undefined,
 	formData: FormData,
-): Promise<SignUpFormState | undefined> {
-	const user = {
-		firstName: formData.get('firstName') as string,
-		lastName: formData.get('lastName') as string,
-		phoneNumber: formData.get('phoneNumber') as string,
-		email: formData.get('email') as string,
-	};
+): Promise<IActionFormState | undefined> {
+	const validatedForm = validateForm(formData, SignUpFormSchema);
+	if (!validatedForm.success) return validatedForm;
 
-	const userWithPasswords = {
-		...user,
-		password: formData.get('password') as string,
-		confirmPassword: formData.get('confirmPassword') as string,
-	};
-
-	const validatedFields = SignUpFormSchema.safeParse(userWithPasswords);
-
-	if (!validatedFields.success) {
-		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-			...user,
-		};
-	}
-
-	const { email, password } = validatedFields.data;
+	const { data } = validatedForm;
+	// eslint-disable-next-line no-unused-vars
+	const { password, confirmPassword, ...userWithoutPasswords } = data;
+	const { email } = userWithoutPasswords;
 
 	const existingUser = await getUserByEmail(email);
 
@@ -52,14 +28,15 @@ export async function actionSignup(
 			errors: {
 				email: 'This email already exist in the system.',
 			},
-			...user,
+			data: {
+				...userWithoutPasswords,
+			},
 		};
 	}
 
 	const hashedPassword = await getHashPassword(password);
-
 	const createdUser = await createUser({
-		...user,
+		...userWithoutPasswords,
 		password: hashedPassword,
 	});
 
@@ -75,5 +52,5 @@ export async function actionSignup(
 
 	await createSession(createdUser.id);
 
-	redirect('/signin');
+	redirect(routes.SIGNIN);
 }

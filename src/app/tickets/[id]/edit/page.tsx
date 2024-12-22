@@ -5,41 +5,10 @@ import { actionGetTicket, actionUpdateTicket } from '@/actions/tickets';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import toast from 'react-hot-toast';
-
-interface ICategory {
-	id?: number;
-	title: string;
-}
-
-type Role = 'ADMIN' | 'USER';
-type Status = 'Pending' | 'InProgress' | 'Resolved';
-
-interface IUser {
-	id?: number;
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	role?: Role;
-	phoneNumber?: string | null;
-	createdAt?: Date;
-	updatedAt?: Date;
-	password?: string;
-}
-
-interface ITicket {
-	id: number;
-	title: string;
-	content: string;
-	status: Status;
-	createdBy: number;
-	assignedTo: number | null;
-	categoryId: number;
-	createdAt: Date;
-	updatedAt: Date;
-	createdByUser: IUser;
-	assignedToUser: IUser | null;
-	category: ICategory;
-}
+import { routes } from '@/utils/constants';
+import { Button } from '@/components/ui';
+import { FormInputBox } from '@/components/';
+import { ICategory, ITicket } from '@/types/interfaces';
 
 export default function EditTicket() {
 	const { id } = useParams<{ id: string }>();
@@ -78,7 +47,7 @@ export default function EditTicket() {
 		<div>
 			<h1 className="title">Edit ticket {ticket?.title}</h1>
 			<div className="mb-10">
-				<Link href="/tickets" className="text-link">
+				<Link href={routes.TICKETS} className="text-link">
 					Back to all tickets
 				</Link>
 			</div>
@@ -86,6 +55,13 @@ export default function EditTicket() {
 				<div className="container w-3/4">
 					<form action={action} autoComplete="off" className="space-y-4">
 						<input type="hidden" name="id" value={id} />
+						{/* <FormInputBox
+							id="categoryId"
+							name="categoryId"
+							labelText="Category"
+							defaultValue={state?.categoryId ?? ''}
+							errors={state?.errors?.categoryId}
+						/> */}
 						<div>
 							<label htmlFor="categoryId">Category</label>
 							<select
@@ -104,7 +80,14 @@ export default function EditTicket() {
 								<p className="error">{state.errors.category}</p>
 							)}
 						</div>
-						<div>
+						<FormInputBox
+							id="title"
+							name="title"
+							labelText="Title"
+							defaultValue={(state?.data?.title || ticket.title) ?? ''}
+							errors={state?.errors?.title}
+						/>
+						{/* <div>
 							<label htmlFor="title">Title</label>
 							<input
 								id="title"
@@ -116,23 +99,28 @@ export default function EditTicket() {
 							{state?.errors?.title && (
 								<p className="error">{state.errors.title}</p>
 							)}
-						</div>
+						</div> */}
+						{/* <FormInputBox
+							id="content"
+							name="content"
+							labelText="Content"
+							defaultValue={(state?.content || ticket.content) ?? ''}
+							errors={state?.errors?.content}
+						/> */}
 						<div>
 							<label htmlFor="content">Content</label>
 							<textarea
 								id="content"
 								name="content"
 								autoComplete="off"
-								defaultValue={(state?.content || ticket.content) ?? ''}
+								defaultValue={(state?.data?.content || ticket.content) ?? ''}
 							/>
 							{state?.errors?.content && (
 								<p className="error">{state.errors.content}</p>
 							)}
 						</div>
 						<div className="flex items-end gap-4">
-							<button disabled={isPending} className="btn-primary">
-								Save
-							</button>
+							<Button text="Save" disabled={isPending} />
 						</div>
 					</form>
 				</div>

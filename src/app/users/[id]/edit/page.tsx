@@ -3,24 +3,10 @@ import { useEffect, useState, useActionState } from 'react';
 import { actionGetUser, actionUpdateUser } from '@/actions/users';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-
-type Role = 'ADMIN' | 'USER';
-// enum Role {
-// 	ADMIN = 'ADMIN',
-// 	USER = 'USER',
-// }
-
-interface IUser {
-	id: number;
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	role?: Role;
-	phoneNumber?: string | null;
-	createdAt?: Date;
-	updatedAt?: Date;
-	password?: string;
-}
+import { routes } from '@/utils/constants';
+import { Button } from '@/components/ui';
+import { FormInputBox } from '@/components/';
+import { IUser, RoleType } from '@/types/interfaces';
 
 export default function EditUser() {
 	const { id } = useParams<{ id: string }>();
@@ -29,7 +15,9 @@ export default function EditUser() {
 		actionUpdateUser,
 		undefined,
 	);
-	const [selectedRole, setSelectedRole] = useState(state?.role || 'ADMIN');
+	const [selectedRole, setSelectedRole] = useState(
+		state?.data?.role || 'ADMIN',
+	);
 
 	useEffect(() => {
 		if (id) {
@@ -47,7 +35,7 @@ export default function EditUser() {
 				Edit user {`${user?.firstName} ${user?.lastName}`}
 			</h1>
 			<div className="mb-10">
-				<Link href="/users" className="text-link">
+				<Link href={routes.USERS} className="text-link">
 					Back to all users
 				</Link>
 			</div>
@@ -55,7 +43,14 @@ export default function EditUser() {
 				<div className="container w-3/4">
 					<form action={action} autoComplete="off" className="space-y-4">
 						<input type="hidden" name="id" value={id} />
-						<div>
+						<FormInputBox
+							id="firstName"
+							name="firstName"
+							labelText="First Name"
+							defaultValue={(state?.data?.firstName || user.firstName) ?? ''}
+							errors={state?.errors?.firstName}
+						/>
+						{/* <div>
 							<label htmlFor="firstName">First Name</label>
 							<input
 								id="firstName"
@@ -67,8 +62,15 @@ export default function EditUser() {
 							{state?.errors?.firstName && (
 								<p className="error">{state.errors.firstName}</p>
 							)}
-						</div>
-						<div>
+						</div> */}
+						<FormInputBox
+							id="lastName"
+							name="lastName"
+							labelText="Last Name"
+							defaultValue={(state?.data?.lastName || user.lastName) ?? ''}
+							errors={state?.errors?.lastName}
+						/>
+						{/* <div>
 							<label htmlFor="lastName">Last Name</label>
 							<input
 								id="lastName"
@@ -80,8 +82,15 @@ export default function EditUser() {
 							{state?.errors?.lastName && (
 								<p className="error">{state.errors.lastName}</p>
 							)}
-						</div>
-						<div>
+						</div> */}
+						<FormInputBox
+							id="email"
+							name="email"
+							labelText="Email"
+							defaultValue={(state?.data?.email || user.email) ?? ''}
+							errors={state?.errors?.email}
+						/>
+						{/* <div>
 							<label htmlFor="email">Email</label>
 							<input
 								id="email"
@@ -93,14 +102,21 @@ export default function EditUser() {
 							{state?.errors?.email && (
 								<p className="error">{state.errors.email}</p>
 							)}
-						</div>
+						</div> */}
+						{/* <FormInputBox
+							id="role"
+							name="role"
+							labelText="Role"
+							value={selectedRole}
+							errors={state?.errors?.role}
+						/> */}
 						<div>
 							<label htmlFor="role">Role</label>
 							<select
 								id="role"
 								name="role"
 								value={selectedRole}
-								onChange={(e) => setSelectedRole(e.target.value as Role)}
+								onChange={(e) => setSelectedRole(e.target.value as RoleType)}
 								// defaultValue={
 								// 	state?.role === 'ADMIN' || user.role === 'ADMIN'
 								// 		? 'ADMIN'
@@ -114,7 +130,16 @@ export default function EditUser() {
 								<p className="error">{state.errors.role}</p>
 							)}
 						</div>
-						<div>
+						<FormInputBox
+							id="phoneNumber"
+							name="phoneNumber"
+							labelText="Phone Number"
+							defaultValue={
+								(state?.data?.phoneNumber || user.phoneNumber) ?? ''
+							}
+							errors={state?.errors?.phoneNumber}
+						/>
+						{/* <div>
 							<label htmlFor="phoneNumber">Phone Number</label>
 							<input
 								id="phoneNumber"
@@ -126,11 +151,9 @@ export default function EditUser() {
 							{state?.errors?.phoneNumber && (
 								<p className="error">{state.errors.phoneNumber}</p>
 							)}
-						</div>
+						</div> */}
 						<div className="flex items-end gap-4">
-							<button disabled={isPending} className="btn-primary">
-								Edit user
-							</button>
+							<Button text="Edit user" disabled={isPending} />
 						</div>
 					</form>
 				</div>

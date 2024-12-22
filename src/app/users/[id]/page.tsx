@@ -6,26 +6,10 @@ import { useParams, usePathname } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import { useConfirmationModal } from '@/hooks/useConfirmationModal';
-import { ConfirmationModal } from '@/components/ConfirmationModal';
-
-// enum Role {
-// 	ADMIN = 'ADMIN',
-// 	USER = 'USER',
-// }
-
-type Role = 'ADMIN' | 'USER';
-
-interface IUser {
-	id: number;
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	role?: Role;
-	phoneNumber?: string | null;
-	createdAt?: Date;
-	updatedAt?: Date;
-	password?: string;
-}
+import { ConfirmationModal } from '@/components';
+import { routes } from '@/utils/constants';
+import { Button } from '@/components/ui';
+import { IUser } from '@/types/interfaces';
 
 export default function User() {
 	const path = usePathname();
@@ -48,9 +32,9 @@ export default function User() {
 		const result = await actionDeleteUser(parseInt(id));
 		if (result?.success) {
 			toast.success(result.success);
-			router.push('/users');
+			router.push(routes.USERS);
 		}
-		if (result?.errors) toast.error(result.errors);
+		if (result?.message) toast.error(result.message);
 	};
 
 	const handleOpenDeleteModal = () => {
@@ -61,8 +45,8 @@ export default function User() {
 		<div>
 			<h1 className="title">User {`${user?.firstName} ${user?.lastName}`}</h1>
 			<div className="mb-10">
-				<Link href="/users" className="text-link">
-					Back to all categories
+				<Link href={routes.USERS} className="text-link">
+					Back to all users
 				</Link>
 			</div>
 			{user ? (
@@ -91,14 +75,12 @@ export default function User() {
 					</ul>
 					<div className="mt-16">
 						<Link
-							href={`${path}/edit`}
+							href={`${path}${routes.EDIT}`}
 							className="inline-flex btn-primary mr-6"
 						>
 							Edit
 						</Link>
-						<button className="btn-primary" onClick={handleOpenDeleteModal}>
-							Delete
-						</button>
+						<Button text="Delete" onClick={handleOpenDeleteModal} />
 					</div>
 				</>
 			) : (

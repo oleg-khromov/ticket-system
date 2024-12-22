@@ -11,13 +11,13 @@ import {
 	Link,
 } from '@react-email/components';
 
-interface EmailTemplateProps {
+interface IEmailTemplateProps {
 	token: string;
 }
 
 const baseUrl = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '';
 
-const EmailResetPassword = (props: EmailTemplateProps) => {
+const EmailResetPassword = (props: IEmailTemplateProps) => {
 	const resetPasswordUrl =
 		baseUrl + '/change-password/' + encodeURIComponent(props.token);
 	return (

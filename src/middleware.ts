@@ -1,6 +1,7 @@
 'use server';
 import { NextRequest, NextResponse } from 'next/server';
 import { decrypt, getSession } from '@/lib/session';
+import { routes } from '@/utils/constants';
 
 const protectedRoutePatterns: RegExp[] = [
 	/^\/categories$/,
@@ -44,11 +45,11 @@ export default async function middleware(
 	}
 
 	if (isProtectedRoute && !payload?.userId) {
-		return NextResponse.redirect(new URL('/signin', req.nextUrl));
+		return NextResponse.redirect(new URL(routes.SIGNIN, req.nextUrl));
 	}
 
-	if (isPublicRoute && payload?.userId && path !== '/') {
-		return NextResponse.redirect(new URL('/tickets', req.nextUrl));
+	if (isPublicRoute && payload?.userId && path !== routes.HOME) {
+		return NextResponse.redirect(new URL(routes.TICKETS, req.nextUrl));
 	}
 
 	return NextResponse.next();

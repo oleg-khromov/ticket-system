@@ -10,55 +10,21 @@ import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
 import { formatDate } from '@/utils/formatters';
 import toast from 'react-hot-toast';
-import { ROLE } from '@/types/interfaces';
+import { routes } from '@/utils/constants';
+import {
+	IUser,
+	ITicketWithFullInformation,
+	StatusType,
+	USER_ROLE,
+	TICKET_STATUS,
+} from '@/types/interfaces';
 
-interface ICategory {
-	id?: number;
-	title: string;
-}
-
-type Role = 'ADMIN' | 'USER';
-type STATUS = 'Pending' | 'InProgress' | 'Resolved';
-
-// enum STATUS {
-// 	Pending = 'Pending',
-// 	InProgress = 'InProgress',
-// 	Resolved = 'Resolved',
-// }
-
-interface IUser {
-	id?: number;
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	role?: Role;
-	phoneNumber?: string | null;
-	createdAt?: Date;
-	updatedAt?: Date;
-	password?: string;
-}
-
-interface ITicket {
-	id: number;
-	title: string;
-	content: string;
-	status: STATUS;
-	createdBy: number;
-	assignedTo: number | null;
-	categoryId: number;
-	createdAt: Date;
-	updatedAt: Date;
-	createdByUser: IUser;
-	assignedToUser: IUser | null;
-	category: ICategory;
-}
-
-const statuses = ['Pending', 'InProgress', 'Resolved'];
+const ticketStatuses = Object.values(TICKET_STATUS);
 
 export default function Ticket() {
 	const path = usePathname();
 	const { id } = useParams<{ id: string }>();
-	const [ticket, setTicket] = useState<ITicket | null>(null);
+	const [ticket, setTicket] = useState<ITicketWithFullInformation | null>(null);
 	const [selectedStatus, setSelectedStatus] = useState(ticket?.status);
 	const [selectedAssignedTo, setSelectedAssignedTo] = useState(0);
 	const [admins, setAdmins] = useState<IUser[]>([]);
@@ -72,7 +38,7 @@ export default function Ticket() {
 			};
 			fetchTicket();
 			const fetchUsersAdmin = async () => {
-				const fetchedUserAdmins = await actionGetUsersByRole(ROLE.ADMIN);
+				const fetchedUserAdmins = await actionGetUsersByRole(USER_ROLE.ADMIN);
 				setAdmins(fetchedUserAdmins);
 			};
 			fetchUsersAdmin();
@@ -84,13 +50,13 @@ export default function Ticket() {
 			const updateTicket = async () => {
 				const updatedTicket = await actionUpdateTicketStatus(
 					id,
-					selectedStatus as STATUS,
+					selectedStatus as StatusType,
 				);
-				setTicket({
-					...ticket,
-					...(updatedTicket?.result as ITicket),
-				});
-				console.log(updatedTicket.result, selectedStatus, ticket?.status);
+				// setTicket({
+				// 	...ticket,
+				// 	...(updatedTicket?.data as ITicketWithFullInformation),
+				// });
+				console.log(/*updatedTicket.data,*/ selectedStatus, ticket?.status);
 				if (updatedTicket?.message) toast.success(updatedTicket.message);
 			};
 			updateTicket();
@@ -104,12 +70,12 @@ export default function Ticket() {
 					id,
 					selectedAssignedTo,
 				);
-				setTicket({
-					...ticket,
-					...(updatedTicket?.result as ITicket),
-				});
+				// setTicket({
+				// 	...ticket,
+				// 	...(updatedTicket?.data as ITicketWithFullInformation),
+				// });
 				console.log(
-					updatedTicket.result,
+					// updatedTicket.data,
 					selectedAssignedTo,
 					ticket?.assignedTo,
 				);
@@ -123,7 +89,7 @@ export default function Ticket() {
 		<div>
 			<h1 className="title">Ticket {ticket?.title}</h1>
 			<div className="mb-10">
-				<Link href="/tickets" className="text-link">
+				<Link href={routes.TICKETS} className="text-link">
 					Back to all tickets
 				</Link>
 			</div>
@@ -150,9 +116,11 @@ export default function Ticket() {
 								id="status"
 								name="status"
 								value={selectedStatus || ticket.status}
-								onChange={(e) => setSelectedStatus(e.target.value as STATUS)}
+								onChange={(e) =>
+									setSelectedStatus(e.target.value as StatusType)
+								}
 							>
-								{statuses?.map((status) => (
+								{ticketStatuses?.map((status) => (
 									<option key={status} value={status}>
 										{status}
 									</option>
@@ -192,16 +160,16 @@ export default function Ticket() {
 						</li>
 						<li className="flex">
 							<b className="w-1/5 mr-6">Created At:</b>
-							{formatDate(ticket.createdAt)}
+							{formatDate(ticket.createdAt as Date)}
 						</li>
 						<li className="flex">
 							<b className="w-1/5 mr-6">Updated At:</b>
-							{formatDate(ticket.updatedAt)}
+							{formatDate(ticket.updatedAt as Date)}
 						</li>
 					</ul>
 					<div className="mt-16">
 						<Link
-							href={`${path}/edit`}
+							href={`${path}${routes.EDIT}`}
 							className="inline-flex btn-primary mr-6"
 						>
 							Edit

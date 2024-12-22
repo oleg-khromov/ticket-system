@@ -1,11 +1,11 @@
-export enum ROLE {
+export enum USER_ROLE {
 	// eslint-disable-next-line no-unused-vars
 	USER = 'USER',
 	// eslint-disable-next-line no-unused-vars
 	ADMIN = 'ADMIN',
 }
 
-export enum STATUS {
+export enum TICKET_STATUS {
 	// eslint-disable-next-line no-unused-vars
 	Pending = 'Pending',
 	// eslint-disable-next-line no-unused-vars
@@ -14,20 +14,22 @@ export enum STATUS {
 	Resolved = 'Resolved',
 }
 
-export type RoleType = keyof typeof ROLE;
-export type StatusType = keyof typeof STATUS;
-export type IUserWithouPassword = Omit<IUser, 'password'>;
+export type RoleType = keyof typeof USER_ROLE;
+export type StatusType = keyof typeof TICKET_STATUS;
 
 export interface IUser {
 	id?: number;
 	firstName: string;
 	lastName: string;
 	email: string;
-	password: string;
 	role?: RoleType;
-	phoneNumber?: string;
+	phoneNumber?: string | null;
 	createdAt?: Date;
 	updatedAt?: Date;
+}
+
+export interface IUserWithPassword extends IUser {
+	password: string;
 }
 
 export interface IPasswordResetToken {
@@ -49,8 +51,21 @@ export interface ITicket {
 	content: string;
 	status?: StatusType;
 	createdBy: number;
-	assignedTo?: number;
+	assignedTo?: number | null;
 	categoryId: number;
 	createdAt?: Date;
 	updatedAt?: Date;
+}
+
+export interface ITicketWithFullInformation extends ITicket {
+	createdByUser: IUser;
+	assignedToUser?: IUser | null;
+	category: ICategory;
+}
+
+export interface IActionFormState {
+	errors?: Record<string, string | string[]>;
+	data?: Record<string, string>;
+	message?: string;
+	success?: boolean;
 }

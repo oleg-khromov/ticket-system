@@ -1,4 +1,6 @@
-interface ConfirmationModalProps {
+import { Button } from '@/components/ui';
+
+interface IConfirmationModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	onConfirm: () => void;
@@ -6,13 +8,13 @@ interface ConfirmationModalProps {
 	description?: string;
 }
 
-export const ConfirmationModal = ({
+export default function ConfirmationModal({
 	isOpen,
 	onClose,
 	onConfirm,
 	title = 'Are you sure?',
 	description = 'This action cannot be undone.',
-}: ConfirmationModalProps) => {
+}: IConfirmationModalProps) {
 	if (!isOpen) return null;
 
 	return (
@@ -21,17 +23,10 @@ export const ConfirmationModal = ({
 				<h2 className="text-xl font-semibold mb-4">{title}</h2>
 				<p className="mb-4">{description}</p>
 				<div className="flex justify-end space-x-4">
-					<button className="px-4 py-2 bg-gray-200 rounded" onClick={onClose}>
-						Cancel
-					</button>
-					<button
-						className="px-4 py-2 bg-red-500 text-white rounded"
-						onClick={onConfirm}
-					>
-						Confirm
-					</button>
+					<Button text="Cancel" onClick={onClose} />
+					<Button text="Confirm" onClick={onConfirm} />
 				</div>
 			</div>
 		</div>
 	);
-};
+}

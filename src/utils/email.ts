@@ -27,8 +27,6 @@ export const sendResetPasswordEmail = async (email: string, token: string) => {
 		subject: 'Reset password on TicketSystem',
 		react: React.createElement(EmailResetPassword, { token }),
 		headers: {
-			// this is important for if the subscriber has to resend the confirmation email.
-			// the date header ensures there is a change in the email and it is not marked as spam.
 			Date: new Date().toUTCString(),
 		},
 	});

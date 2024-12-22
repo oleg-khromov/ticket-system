@@ -1,28 +1,22 @@
 'use server';
 import { getUserWithUnresolvedTickets, deleteUser } from '@/queries';
-import { redirect } from 'next/navigation';
+import { IActionFormState } from '@/types/interfaces';
 
 export async function actionDeleteUser(
 	id: number,
-): Promise<{ errors?: string; success?: string } | undefined> {
-	console.log(id, 33333);
+): Promise<IActionFormState | undefined> {
 	const existingTickets = await getUserWithUnresolvedTickets(id);
 
 	if (existingTickets)
 		return {
-			errors: 'This user has unresolved tickets.',
+			message: 'This user has unresolved tickets.',
 		};
-
-	console.log(existingTickets, 4444);
 
 	const deletedUser = await deleteUser(id);
 
-	console.log(deletedUser, 5555);
-
 	if (deletedUser)
 		return {
-			success: `User ${deletedUser.firstName} ${deletedUser.lastName} has deleted successfully`,
+			message: `User ${deletedUser.firstName} ${deletedUser.lastName} has deleted successfully`,
+			success: true,
 		};
-
-	redirect('/users');
 }

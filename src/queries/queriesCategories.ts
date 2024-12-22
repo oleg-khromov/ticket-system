@@ -38,7 +38,6 @@ export async function updateCategory(id: number, data: ICategory) {
 	return await prisma.category.update({
 		where: {
 			id,
-			// title: currentTitle,
 		},
 		data,
 	});

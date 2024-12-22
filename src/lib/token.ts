@@ -25,7 +25,6 @@ export async function decrypt(token: string) {
 		return payload;
 	} catch (error) {
 		console.log('Failed to verify token');
-		// return null;
 	}
 }
 

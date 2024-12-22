@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-interface UseConfirmationModalResult {
+interface IUseConfirmationModalResult {
 	isModalOpen: boolean;
 	openModal: () => void;
 	closeModal: () => void;
@@ -9,7 +9,7 @@ interface UseConfirmationModalResult {
 	setOnConfirm: (action: () => void) => void;
 }
 
-export const useConfirmationModal = (): UseConfirmationModalResult => {
+export const useConfirmationModal = (): IUseConfirmationModalResult => {
 	const [isModalOpen, setModalOpen] = useState(false);
 	const [onConfirm, setOnConfirmAction] = useState<(() => void) | null>(null);
 

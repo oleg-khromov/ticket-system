@@ -3,20 +3,8 @@ import { useEffect, useState } from 'react';
 import { actionGetUsers } from '@/actions/users';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-type Role = 'ADMIN' | 'USER';
-
-interface IUser {
-	id: number;
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	role?: Role;
-	phoneNumber?: string | null;
-	createdAt?: Date;
-	updatedAt?: Date;
-	password?: string;
-}
+import { routes } from '@/utils/constants';
+import { IUser } from '@/types/interfaces';
 
 export default function Users() {
 	const path = usePathname();
@@ -60,7 +48,10 @@ export default function Users() {
 										<td>{role}</td>
 										<td>{phoneNumber}</td>
 										<td>
-											<Link href={`${path}/${id}/edit`} className="text-link">
+											<Link
+												href={`${path}/${id}${routes.EDIT}`}
+												className="text-link"
+											>
 												<b>Edit</b>
 											</Link>
 										</td>

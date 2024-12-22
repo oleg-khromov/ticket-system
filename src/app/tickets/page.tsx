@@ -4,51 +4,12 @@ import { actionGetTickets } from '@/actions/tickets';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { formatDate } from '@/utils/formatters';
-
-// enum Status {
-// 	Pending,
-// 	InProgress,
-// 	Resolved,
-// }
-
-type Role = 'ADMIN' | 'USER';
-type Status = 'Pending' | 'InProgress' | 'Resolved';
-
-interface ICategory {
-	id?: number;
-	title?: string;
-}
-
-interface IUser {
-	id?: number;
-	firstName?: string;
-	lastName?: string;
-	email?: string;
-	role?: Role;
-	phoneNumber?: string | null;
-	createdAt?: Date;
-	updatedAt?: Date;
-	password?: string;
-}
-
-interface ITicket {
-	id: number;
-	title: string;
-	content: string;
-	status: Status;
-	createdBy: number;
-	assignedTo: number | null;
-	categoryId: number;
-	createdAt: Date;
-	updatedAt: Date;
-	createdByUser: IUser;
-	assignedToUser: IUser | null;
-	category: ICategory;
-}
+import { routes } from '@/utils/constants';
+import { ITicketWithFullInformation } from '@/types/interfaces';
 
 export default function Tickets() {
 	const path = usePathname();
-	const [tickets, setTickets] = useState<ITicket[]>([]);
+	const [tickets, setTickets] = useState<ITicketWithFullInformation[]>([]);
 	useEffect(() => {
 		const fetchTickets = async () => {
 			const fetchedTickets = await actionGetTickets();
@@ -101,13 +62,16 @@ export default function Tickets() {
 										<td>
 											{createdByUser.firstName} {createdByUser.lastName}
 										</td>
-										<td>{formatDate(createdAt)}</td>
-										<td>{formatDate(updatedAt)}</td>
+										<td>{formatDate(createdAt as Date)}</td>
+										<td>{formatDate(updatedAt as Date)}</td>
 										<td>
 											{assignedToUser?.firstName} {assignedToUser?.lastName}
 										</td>
 										<td>
-											<Link href={`${path}/${id}/edit`} className="text-link">
+											<Link
+												href={`${path}/${id}${routes.EDIT}`}
+												className="text-link"
+											>
 												<b>Edit</b>
 											</Link>
 										</td>
@@ -121,7 +85,7 @@ export default function Tickets() {
 				<p className="text-center mb-6">Add your first ticket.</p>
 			)}
 			<p className="text-center">
-				<Link href={`${path}/new`} className="btn-primary">
+				<Link href={`${path}${routes.NEW}`} className="btn-primary">
 					Add ticket
 				</Link>
 			</p>

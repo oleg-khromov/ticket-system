@@ -4,53 +4,43 @@ import { verifyPassword } from '@/lib/bcrypt';
 import { createSession } from '@/lib/session';
 import { redirect } from 'next/navigation';
 import { getUserWithPasswordByEmail } from '@/queries';
-
-export interface SignInFormState {
-	errors?: Record<string, string | string[]>;
-	email?: string;
-}
+import { routes } from '@/utils/constants';
+import { IActionFormState } from '@/types/interfaces';
+import { validateForm } from '@/utils/utils';
 
 export async function actionSignin(
-	state: SignInFormState | undefined,
+	state: IActionFormState | undefined,
 	formData: FormData,
-): Promise<SignInFormState | undefined> {
-	const validatedFields = SignInFormSchema.safeParse({
-		email: formData.get('email') as string,
-		password: formData.get('password') as string,
-	});
+): Promise<IActionFormState | undefined> {
+	const validatedForm = validateForm(formData, SignInFormSchema);
+	if (!validatedForm.success) return validatedForm;
 
-	if (!validatedFields.success) {
-		return {
-			errors: validatedFields.error.flatten().fieldErrors,
-			email: formData.get('email') as string,
-		};
-	}
-
-	const { email, password } = validatedFields.data;
+	const { data } = validatedForm;
+	const { email, password } = data;
 
 	const existingUser = await getUserWithPasswordByEmail(email);
-
 	if (!existingUser) {
 		return {
 			errors: {
 				email: 'Invalid credentials.',
 			},
-			email,
+			data: {
+				email,
+			},
 		};
 	}
 
 	const matchedPassword = await verifyPassword(password, existingUser.password);
-
 	if (!matchedPassword) {
 		return {
 			errors: {
 				password: 'Invalid credentials.',
 			},
-			email,
+			data: { email },
 		};
 	}
 
 	await createSession(existingUser.id);
 
-	redirect('/tickets');
+	redirect(routes.TICKETS);
 }

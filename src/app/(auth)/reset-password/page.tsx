@@ -2,6 +2,9 @@
 import { useActionState } from 'react';
 import { actionResetPassword } from '@/actions/auth';
 import Link from 'next/link';
+import { routes } from '@/utils/constants';
+import { Button } from '@/components/ui';
+import { FormInputBox } from '@/components/';
 
 export default function ResetPassword() {
 	const [state, action, isPending] = useActionState(
@@ -19,7 +22,7 @@ export default function ResetPassword() {
 							password.
 						</p>
 						<p className="small-text">
-							<Link href="/signin" className="text-link">
+							<Link href={routes.SIGNIN} className="text-link">
 								Back to Sign In
 							</Link>
 						</p>
@@ -32,7 +35,14 @@ export default function ResetPassword() {
 							you instructions to reset your password.
 						</p>
 						<form action={action} autoComplete="off" className="space-y-4">
-							<div>
+							<FormInputBox
+								id="email"
+								name="email"
+								labelText="Email"
+								defaultValue={state?.data?.email ?? ''}
+								errors={state?.errors?.email}
+							/>
+							{/* <div>
 								<label htmlFor="email">Email</label>
 								<input
 									id="email"
@@ -44,12 +54,10 @@ export default function ResetPassword() {
 								{state?.errors?.email && (
 									<p className="error">{state.errors.email}</p>
 								)}
-							</div>
+							</div> */}
 							<div className="flex items-end gap-4">
-								<button disabled={isPending} className="btn-primary">
-									Reset password
-								</button>
-								<Link href="/signin" className="text-link">
+								<Button text="Reset password" disabled={isPending} />
+								<Link href={routes.SIGNIN} className="text-link">
 									or back to Sign In
 								</Link>
 							</div>
