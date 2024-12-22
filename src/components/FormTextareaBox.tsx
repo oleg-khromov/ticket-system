@@ -1,28 +1,26 @@
 import React from 'react';
-import { Input, Label, TextError } from '@/components/ui';
-import { IInput } from '@/components/ui/Input';
+import { Textarea, Label, TextError } from '@/components/ui';
+import { ITextarea } from '@/components/ui/Textarea';
 import { ILabel } from '@/components/ui/Label';
 import { ITextError } from '@/components/ui/TextError';
 
-interface IFormInputBox extends IInput, ILabel, ITextError {}
+interface IFormTextareaBox extends ITextarea, ILabel, ITextError {}
 
-export default function FormInputBox({
+export default function FormTextareaBox({
 	labelText,
 	required,
 	id,
-	type,
 	name,
 	autoComplete,
 	defaultValue,
 	errors,
 	errorClassName,
-}: IFormInputBox) {
+}: IFormTextareaBox) {
 	return (
 		<div>
 			<Label htmlFor={id} labelText={labelText} required={required} />
-			<Input
+			<Textarea
 				id={id}
-				type={type}
 				name={name}
 				autoComplete={autoComplete}
 				defaultValue={defaultValue}

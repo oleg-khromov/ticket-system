@@ -43,54 +43,16 @@ export default function ChangePassword() {
 								type="password"
 								labelText="Password"
 								errors={state?.errors?.password}
-								mandatory={true}
+								required={true}
 							/>
-							{/* <div>
-								<label htmlFor="password">
-									Password<span className="mandatory">*</span>
-								</label>
-								<input
-									id="password"
-									type="password"
-									name="password"
-									autoComplete="off"
-								/>
-								{state?.errors?.password &&
-									(Array.isArray(state.errors.password) ? (
-										<div className="error">
-											<p>Password must:</p>
-											<ul className="list-disc list-inside ml-4">
-												{state.errors.password.map((error) => (
-													<li key={error}>{error}</li>
-												))}
-											</ul>
-										</div>
-									) : (
-										<p className="error">{state.errors.password}</p>
-									))}
-							</div> */}
 							<FormInputBox
 								id="confirmPassword"
 								name="confirmPassword"
 								type="password"
 								labelText="Confirm Password"
 								errors={state?.errors?.confirmPassword}
-								mandatory={true}
+								required={true}
 							/>
-							{/* <div>
-								<label htmlFor="confirmPassword">
-									Confirm Password<span className="mandatory">*</span>
-								</label>
-								<input
-									id="confirmPassword"
-									type="password"
-									name="confirmPassword"
-									autoComplete="off"
-								/>
-								{state?.errors?.confirmPassword && (
-									<p className="error">{state.errors.confirmPassword}</p>
-								)}
-							</div> */}
 							<div className="flex items-end gap-4">
 								<Button text="Change password" disabled={isPending} />
 								<Link href={routes.SIGNUP} className="text-link">

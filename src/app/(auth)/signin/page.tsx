@@ -20,19 +20,6 @@ export default function SignIn() {
 						defaultValue={state?.data?.email ?? ''}
 						errors={state?.errors?.email}
 					/>
-					{/* <div>
-						<label htmlFor="email">Email</label>
-						<input
-							id="email"
-							type="text"
-							name="email"
-							autoComplete="off"
-							defaultValue={state?.email ?? ''}
-						/>
-						{state?.errors?.email && (
-							<p className="error">{state.errors.email}</p>
-						)}
-					</div> */}
 					<FormInputBox
 						id="password"
 						name="password"
@@ -40,23 +27,6 @@ export default function SignIn() {
 						labelText="Password"
 						errors={state?.errors?.password}
 					/>
-					{/* <div>
-						<div className="flex items-center justify-between gap-4">
-							<label htmlFor="password">Password</label>
-							<Link href={routes.RESET_PASSWORD} className="label-text">
-								Forgot Password?
-							</Link>
-						</div>
-						<input
-							id="password"
-							type="password"
-							name="password"
-							autoComplete="off"
-						/>
-						{state?.errors?.password && (
-							<p className="error">{state.errors.password}</p>
-						)}
-					</div> */}
 					<Link href={routes.RESET_PASSWORD} className="label-text">
 						Forgot Password?
 					</Link>

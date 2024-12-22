@@ -9,5 +9,18 @@ export default function TextError({
 	errors = '',
 	errorClassName = 'error',
 }: ITextError) {
-	return <p className={errorClassName}>{errors}</p>;
+	return (
+		<>
+			{errors &&
+				(Array.isArray(errors) ? (
+					errors.map((error) => (
+						<p key={error} className={errorClassName}>
+							{error}
+						</p>
+					))
+				) : (
+					<p className={errorClassName}>{errors}</p>
+				))}
+		</>
+	);
 }

@@ -1,31 +1,31 @@
 import React from 'react';
-import { Input, Label, TextError } from '@/components/ui';
-import { IInput } from '@/components/ui/Input';
+import { Select, Label, TextError } from '@/components/ui';
+import { ISelect } from '@/components/ui/Select';
 import { ILabel } from '@/components/ui/Label';
 import { ITextError } from '@/components/ui/TextError';
 
-interface IFormInputBox extends IInput, ILabel, ITextError {}
+interface IFormSelectBox extends ISelect, ILabel, ITextError {}
 
-export default function FormInputBox({
+export default function FormSelectBox({
 	labelText,
 	required,
 	id,
-	type,
 	name,
-	autoComplete,
-	defaultValue,
+	value,
 	errors,
 	errorClassName,
-}: IFormInputBox) {
+	options,
+	onChange,
+}: IFormSelectBox) {
 	return (
 		<div>
 			<Label htmlFor={id} labelText={labelText} required={required} />
-			<Input
+			<Select
 				id={id}
-				type={type}
 				name={name}
-				autoComplete={autoComplete}
-				defaultValue={defaultValue}
+				value={value}
+				options={options}
+				onChange={onChange}
 			/>
 			<TextError errors={errors} errorClassName={errorClassName} />
 		</div>

@@ -35,7 +35,6 @@ async function main() {
 			phoneNumber: '3101234567',
 		},
 	});
-	console.log(admin, user);
 }
 main()
 	.then(async () => {

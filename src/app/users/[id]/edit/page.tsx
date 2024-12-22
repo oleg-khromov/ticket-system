@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { routes } from '@/utils/constants';
 import { Button } from '@/components/ui';
-import { FormInputBox } from '@/components/';
-import { IUser, RoleType } from '@/types/interfaces';
+import { FormInputBox, FormSelectBox } from '@/components/';
+import { IUser, USER_ROLE } from '@/types/interfaces';
 
 export default function EditUser() {
 	const { id } = useParams<{ id: string }>();
@@ -16,15 +16,25 @@ export default function EditUser() {
 		undefined,
 	);
 	const [selectedRole, setSelectedRole] = useState(
-		state?.data?.role || 'ADMIN',
+		state?.data?.role || USER_ROLE.ADMIN,
 	);
+	const selectRoleOptions = [
+		{
+			id: USER_ROLE.ADMIN,
+			title: USER_ROLE.ADMIN,
+		},
+		{
+			id: USER_ROLE.USER,
+			title: USER_ROLE.USER,
+		},
+	];
 
 	useEffect(() => {
 		if (id) {
 			const fetchUser = async () => {
 				const fetchedUser = await actionGetUser(parseInt(id));
 				setUser(fetchedUser);
-				setSelectedRole(fetchedUser?.role || 'ADMIN');
+				setSelectedRole(fetchedUser?.role || USER_ROLE.ADMIN);
 			};
 			fetchUser();
 		}
@@ -50,19 +60,6 @@ export default function EditUser() {
 							defaultValue={(state?.data?.firstName || user.firstName) ?? ''}
 							errors={state?.errors?.firstName}
 						/>
-						{/* <div>
-							<label htmlFor="firstName">First Name</label>
-							<input
-								id="firstName"
-								type="text"
-								name="firstName"
-								autoComplete="off"
-								defaultValue={(state?.firstName || user.firstName) ?? ''}
-							/>
-							{state?.errors?.firstName && (
-								<p className="error">{state.errors.firstName}</p>
-							)}
-						</div> */}
 						<FormInputBox
 							id="lastName"
 							name="lastName"
@@ -70,19 +67,6 @@ export default function EditUser() {
 							defaultValue={(state?.data?.lastName || user.lastName) ?? ''}
 							errors={state?.errors?.lastName}
 						/>
-						{/* <div>
-							<label htmlFor="lastName">Last Name</label>
-							<input
-								id="lastName"
-								type="text"
-								name="lastName"
-								autoComplete="off"
-								defaultValue={(state?.lastName || user.lastName) ?? ''}
-							/>
-							{state?.errors?.lastName && (
-								<p className="error">{state.errors.lastName}</p>
-							)}
-						</div> */}
 						<FormInputBox
 							id="email"
 							name="email"
@@ -90,46 +74,15 @@ export default function EditUser() {
 							defaultValue={(state?.data?.email || user.email) ?? ''}
 							errors={state?.errors?.email}
 						/>
-						{/* <div>
-							<label htmlFor="email">Email</label>
-							<input
-								id="email"
-								type="text"
-								name="email"
-								autoComplete="off"
-								defaultValue={(state?.email || user.email) ?? ''}
-							/>
-							{state?.errors?.email && (
-								<p className="error">{state.errors.email}</p>
-							)}
-						</div> */}
-						{/* <FormInputBox
+						<FormSelectBox
 							id="role"
 							name="role"
 							labelText="Role"
 							value={selectedRole}
-							errors={state?.errors?.role}
-						/> */}
-						<div>
-							<label htmlFor="role">Role</label>
-							<select
-								id="role"
-								name="role"
-								value={selectedRole}
-								onChange={(e) => setSelectedRole(e.target.value as RoleType)}
-								// defaultValue={
-								// 	state?.role === 'ADMIN' || user.role === 'ADMIN'
-								// 		? 'ADMIN'
-								// 		: 'USER'
-								// }
-							>
-								<option value="ADMIN">ADMIN</option>
-								<option value="USER">USER</option>
-							</select>
-							{state?.errors?.role && (
-								<p className="error">{state.errors.role}</p>
-							)}
-						</div>
+							options={selectRoleOptions}
+							onChange={(e) => setSelectedRole(e.target.value)}
+							errors={state?.errors?.category}
+						/>
 						<FormInputBox
 							id="phoneNumber"
 							name="phoneNumber"
@@ -139,19 +92,6 @@ export default function EditUser() {
 							}
 							errors={state?.errors?.phoneNumber}
 						/>
-						{/* <div>
-							<label htmlFor="phoneNumber">Phone Number</label>
-							<input
-								id="phoneNumber"
-								type="text"
-								name="phoneNumber"
-								autoComplete="off"
-								defaultValue={(state?.phoneNumber || user.phoneNumber) ?? ''}
-							/>
-							{state?.errors?.phoneNumber && (
-								<p className="error">{state.errors.phoneNumber}</p>
-							)}
-						</div> */}
 						<div className="flex items-end gap-4">
 							<Button text="Edit user" disabled={isPending} />
 						</div>

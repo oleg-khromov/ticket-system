@@ -1,8 +1,7 @@
 import React from 'react';
 
-export interface IInput {
+export interface ITextarea {
 	id: string;
-	type?: string;
 	name: string;
 	autoComplete?: string;
 	defaultValue?: string;
@@ -10,15 +9,13 @@ export interface IInput {
 
 export default function Input({
 	id,
-	type = 'text',
 	name,
 	autoComplete = 'off',
 	defaultValue = '',
-}: IInput) {
+}: ITextarea) {
 	return (
-		<input
+		<textarea
 			id={id}
-			type={type}
 			name={name}
 			autoComplete={autoComplete}
 			defaultValue={defaultValue}

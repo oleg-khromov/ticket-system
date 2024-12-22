@@ -39,19 +39,6 @@ export default function AddCategory() {
 						defaultValue={state?.data?.title ?? ''}
 						errors={state?.errors?.title}
 					/>
-					{/* <div>
-						<label htmlFor="title">Title</label>
-						<input
-							id="title"
-							type="text"
-							name="title"
-							autoComplete="off"
-							defaultValue={state?.title ?? ''}
-						/>
-						{state?.errors?.title && (
-							<p className="error">{state.errors.title}</p>
-						)}
-					</div> */}
 					<div className="flex items-end gap-4">
 						<Button text="Add category" disabled={isPending} />
 					</div>

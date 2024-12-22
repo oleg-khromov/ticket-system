@@ -12,14 +12,19 @@ import { formatDate } from '@/utils/formatters';
 import toast from 'react-hot-toast';
 import { routes } from '@/utils/constants';
 import {
-	IUser,
 	ITicketWithFullInformation,
 	StatusType,
 	USER_ROLE,
 	TICKET_STATUS,
 } from '@/types/interfaces';
+import { Select } from '@/components/ui';
 
-const ticketStatuses = Object.values(TICKET_STATUS);
+const selectTicketStatusOptions = Object.values(TICKET_STATUS).map(
+	(status) => ({
+		id: status,
+		title: status,
+	}),
+);
 
 export default function Ticket() {
 	const path = usePathname();
@@ -27,19 +32,30 @@ export default function Ticket() {
 	const [ticket, setTicket] = useState<ITicketWithFullInformation | null>(null);
 	const [selectedStatus, setSelectedStatus] = useState(ticket?.status);
 	const [selectedAssignedTo, setSelectedAssignedTo] = useState(0);
-	const [admins, setAdmins] = useState<IUser[]>([]);
+	const [selectAssignedToOptions, setSelectAssignedToOptions] = useState([
+		{
+			id: -1,
+			title: 'Select',
+		},
+	]);
 
 	useEffect(() => {
 		if (id) {
 			const fetchTicket = async () => {
 				const fetchedTicket = await actionGetTicket(parseInt(id));
-				console.log('fetchedTicket', fetchedTicket);
 				setTicket(fetchedTicket);
 			};
 			fetchTicket();
 			const fetchUsersAdmin = async () => {
 				const fetchedUserAdmins = await actionGetUsersByRole(USER_ROLE.ADMIN);
-				setAdmins(fetchedUserAdmins);
+				const users = [...selectAssignedToOptions];
+				fetchedUserAdmins.forEach(({ id, firstName, lastName }) =>
+					users.push({
+						id,
+						title: `${firstName} ${lastName}`,
+					}),
+				);
+				setSelectAssignedToOptions(users);
 			};
 			fetchUsersAdmin();
 		}
@@ -52,11 +68,6 @@ export default function Ticket() {
 					id,
 					selectedStatus as StatusType,
 				);
-				// setTicket({
-				// 	...ticket,
-				// 	...(updatedTicket?.data as ITicketWithFullInformation),
-				// });
-				console.log(/*updatedTicket.data,*/ selectedStatus, ticket?.status);
 				if (updatedTicket?.message) toast.success(updatedTicket.message);
 			};
 			updateTicket();
@@ -69,15 +80,6 @@ export default function Ticket() {
 				const updatedTicket = await actionUpdateTicketAssignedTo(
 					id,
 					selectedAssignedTo,
-				);
-				// setTicket({
-				// 	...ticket,
-				// 	...(updatedTicket?.data as ITicketWithFullInformation),
-				// });
-				console.log(
-					// updatedTicket.data,
-					selectedAssignedTo,
-					ticket?.assignedTo,
 				);
 				if (updatedTicket?.message) toast.success(updatedTicket.message);
 			};
@@ -111,21 +113,15 @@ export default function Ticket() {
 						<li className="flex">
 							<b className="w-1/5 mr-6">Status:</b>
 							{ticket.status}
-
-							<select
+							<Select
 								id="status"
 								name="status"
 								value={selectedStatus || ticket.status}
+								options={selectTicketStatusOptions}
 								onChange={(e) =>
 									setSelectedStatus(e.target.value as StatusType)
 								}
-							>
-								{ticketStatuses?.map((status) => (
-									<option key={status} value={status}>
-										{status}
-									</option>
-								))}
-							</select>
+							/>
 						</li>
 						<li className="flex">
 							<b className="w-1/5 mr-6">CreateBy:</b>
@@ -135,28 +131,15 @@ export default function Ticket() {
 							<b className="w-1/5 mr-6">AssignedTo:</b>
 							{ticket.assignedToUser?.firstName}{' '}
 							{ticket.assignedToUser?.lastName}
-							<select
+							<Select
 								id="assignedTo"
 								name="assignedTo"
 								value={selectedAssignedTo || ticket.assignedTo || 0}
+								options={selectAssignedToOptions}
 								onChange={(e) =>
 									setSelectedAssignedTo(parseInt(e.target.value))
 								}
-							>
-								<option key={0} value={0} className="text-slate-400">
-									Select
-								</option>
-								{/* {!selectedAssignedTo && !ticket.assignedTo ? (
-									<option key={0} value={0}></option>
-								) : (
-									''
-								)} */}
-								{admins?.map(({ id, firstName, lastName }) => (
-									<option key={id} value={id}>
-										{firstName} {lastName}
-									</option>
-								))}
-							</select>
+							/>
 						</li>
 						<li className="flex">
 							<b className="w-1/5 mr-6">Created At:</b>

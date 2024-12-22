@@ -45,19 +45,6 @@ export default function EditCategory() {
 							defaultValue={(state?.data?.title || category.title) ?? ''}
 							errors={state?.errors?.title}
 						/>
-						{/* <div>
-							<label htmlFor="title">Title</label>
-							<input
-								id="title"
-								type="text"
-								name="title"
-								autoComplete="off"
-								defaultValue={(state?.title || category.title) ?? ''}
-							/>
-							{state?.errors?.title && (
-								<p className="error">{state.errors.title}</p>
-							)}
-						</div> */}
 						<div className="flex items-end gap-4">
 							<Button text="Edit category" disabled={isPending} />
 						</div>

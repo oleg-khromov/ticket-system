@@ -42,19 +42,6 @@ export default function ResetPassword() {
 								defaultValue={state?.data?.email ?? ''}
 								errors={state?.errors?.email}
 							/>
-							{/* <div>
-								<label htmlFor="email">Email</label>
-								<input
-									id="email"
-									type="text"
-									name="email"
-									autoComplete="off"
-									defaultValue={state?.email ?? ''}
-								/>
-								{state?.errors?.email && (
-									<p className="error">{state.errors.email}</p>
-								)}
-							</div> */}
 							<div className="flex items-end gap-4">
 								<Button text="Reset password" disabled={isPending} />
 								<Link href={routes.SIGNIN} className="text-link">
