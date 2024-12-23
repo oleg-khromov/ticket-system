@@ -9,6 +9,7 @@ type FormToastState = {
 export const useFormToast = (state?: FormToastState) => {
 	useEffect(() => {
 		if (state) {
+			console.log(state, 'state');
 			if (state.message) {
 				if (state.success) toast.success(state.message);
 				else toast.error(state.message);

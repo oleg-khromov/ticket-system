@@ -1,39 +1,28 @@
 'use client';
-import { useEffect, useState, useActionState } from 'react';
+import { useActionState, useCallback } from 'react';
 import { actionGetCategory, actionUpdateCategory } from '@/actions/categories';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import { routes } from '@/utils/constants';
+import { FormEditCategory } from '@/components';
 import { Heading } from '@/components/ui';
-import { FormEditCategory } from '@/components/';
-import { ICategory } from '@/types/interfaces';
-import { useFormToast } from '@/hooks';
+import { useFormToast, useData } from '@/hooks';
 
 export default function EditCategory() {
 	const { id } = useParams<{ id: string }>();
-	const [category, setCategory] = useState<ICategory | null>(null);
+
 	const [state, action, isPending] = useActionState(
 		actionUpdateCategory,
 		undefined,
 	);
+
+	const { data: category } = useData(
+		useCallback(() => actionGetCategory(parseInt(id)), [id]),
+		[id, isPending],
+	);
+
 	useFormToast(state);
-	useEffect(() => {
-		if (id) {
-			const fetchCategory = async () => {
-				const fetchedCategory = await actionGetCategory(parseInt(id));
-				setCategory(fetchedCategory);
-			};
-			fetchCategory();
-		}
-	}, [id, isPending]);
 	return (
 		<div>
-			<Heading content={`Edit category ${category?.title}`} />
-			<div className="mb-10">
-				<Link href={routes.CATEGORIES} className="text-link">
-					Back to all categories
-				</Link>
-			</div>
+			<Heading content={`Edit category: ${category?.title}`} className="mb-6" />
 			{category ? (
 				<div className="container w-3/4">
 					<FormEditCategory

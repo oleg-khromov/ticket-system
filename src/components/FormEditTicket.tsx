@@ -4,10 +4,12 @@ import { useEffect, useState } from 'react';
 import { FormInputBox, FormSelectBox, FormTextareaBox } from '@/components';
 import { Form, Button } from '@/components/ui';
 import { IForm, ITicket, ICategory } from '@/types/interfaces';
+import Link from 'next/link';
+import { routes } from '@/utils/constants';
 
 interface IFormEditTicket extends IForm {
 	id: string;
-	categories: ICategory[];
+	categories: ICategory[] | null;
 	ticket: ITicket | null;
 }
 
@@ -53,7 +55,10 @@ export default function FormEditTicket({
 				defaultValue={(state?.data?.content || ticket?.content) ?? ''}
 				errors={state?.errors?.content}
 			/>
-			<div className="flex items-end gap-4">
+			<div className="flex items-end gap-4 justify-between">
+				<Link href={routes.TICKETS} className="btn-secondary">
+					Back
+				</Link>
 				<Button text="Save" disabled={isPending} />
 			</div>
 		</Form>

@@ -4,9 +4,11 @@ import { useState } from 'react';
 import { FormInputBox, FormSelectBox, FormTextareaBox } from '@/components';
 import { Form, Button } from '@/components/ui';
 import { IForm, ICategory } from '@/types/interfaces';
+import Link from 'next/link';
+import { routes } from '@/utils/constants';
 
 interface IFormNewTicket extends IForm {
-	categories: ICategory[];
+	categories: ICategory[] | null;
 }
 
 export default function FormNewTicket({
@@ -43,8 +45,11 @@ export default function FormNewTicket({
 				defaultValue={state?.data?.content ?? ''}
 				errors={state?.errors?.content}
 			/>
-			<div className="flex items-end gap-4">
-				<Button text="Add ticket" disabled={isPending} />
+			<div className="flex items-end gap-4 justify-between">
+				<Link href={routes.TICKETS} className="btn-secondary">
+					Back
+				</Link>
+				<Button text="Add" disabled={isPending} />
 			</div>
 		</Form>
 	);

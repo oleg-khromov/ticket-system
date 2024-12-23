@@ -8,9 +8,6 @@ export type ValidationResult<T> = {
 
 const transformFormDataToObject = (formData: FormData): Record<string, any> => {
 	const obj: Record<string, any> = {};
-	// for (const [key, value] of formData.entries()) {
-	// 	(obj as any)[key] = value;
-	// }
 	formData.forEach((value, key) => {
 		(obj as any)[key] = value;
 	});

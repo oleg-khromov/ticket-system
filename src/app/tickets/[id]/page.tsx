@@ -1,35 +1,33 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import {
 	actionGetTicket,
 	actionUpdateTicketStatus,
 	actionUpdateTicketAssignedTo,
 } from '@/actions/tickets';
 import { actionGetUsersByRole } from '@/actions/users';
-import Link from 'next/link';
 import { useParams, usePathname } from 'next/navigation';
+import Link from 'next/link';
 import { formatDate } from '@/utils/formatters';
-import toast from 'react-hot-toast';
-import { routes } from '@/utils/constants';
-import {
-	ITicketWithFullInformation,
-	StatusType,
-	USER_ROLE,
-	TICKET_STATUS,
-} from '@/types/interfaces';
+import { routes, selectTicketStatusOptions } from '@/utils/constants';
+import { StatusType, USER_ROLE } from '@/types/interfaces';
 import { Select, Heading } from '@/components/ui';
-
-const selectTicketStatusOptions = Object.values(TICKET_STATUS).map(
-	(status) => ({
-		id: status,
-		title: status,
-	}),
-);
+import { useData } from '@/hooks';
 
 export default function Ticket() {
 	const path = usePathname();
 	const { id } = useParams<{ id: string }>();
-	const [ticket, setTicket] = useState<ITicketWithFullInformation | null>(null);
+
+	const { data: ticket } = useData(
+		useCallback(() => actionGetTicket(parseInt(id)), [id]),
+		[id],
+	);
+
+	const { data: usersWithRoleAdmin } = useData(
+		useCallback(() => actionGetUsersByRole(USER_ROLE.ADMIN), [id]),
+		[id],
+	);
+
 	const [selectedStatus, setSelectedStatus] = useState(ticket?.status);
 	const [selectedAssignedTo, setSelectedAssignedTo] = useState(0);
 	const [selectAssignedToOptions, setSelectAssignedToOptions] = useState([
@@ -40,59 +38,47 @@ export default function Ticket() {
 	]);
 
 	useEffect(() => {
-		if (id) {
-			const fetchTicket = async () => {
-				const fetchedTicket = await actionGetTicket(parseInt(id));
-				setTicket(fetchedTicket);
-			};
-			fetchTicket();
-			const fetchUsersAdmin = async () => {
-				const fetchedUserAdmins = await actionGetUsersByRole(USER_ROLE.ADMIN);
-				const users = [...selectAssignedToOptions];
-				fetchedUserAdmins.forEach(({ id, firstName, lastName }) =>
-					users.push({
-						id,
-						title: `${firstName} ${lastName}`,
-					}),
-				);
-				setSelectAssignedToOptions(users);
-			};
-			fetchUsersAdmin();
-		}
-	}, [id]);
-
-	useEffect(() => {
-		if (selectedStatus) {
-			const updateTicket = async () => {
-				const updatedTicket = await actionUpdateTicketStatus(
+		let transformedUsers: any[] = [];
+		if (usersWithRoleAdmin)
+			transformedUsers = usersWithRoleAdmin.map(
+				({ id, firstName, lastName }) => ({
 					id,
-					selectedStatus as StatusType,
-				);
-				if (updatedTicket?.message) toast.success(updatedTicket.message);
-			};
-			updateTicket();
-		}
-	}, [selectedStatus]);
+					title: `${firstName} ${lastName}`,
+				}),
+			);
+		setSelectAssignedToOptions([
+			{
+				id: -1,
+				title: 'Select',
+			},
+			...transformedUsers,
+		]);
+	}, [id, usersWithRoleAdmin]);
 
-	useEffect(() => {
-		if (selectedAssignedTo) {
-			const updateTicket = async () => {
-				const updatedTicket = await actionUpdateTicketAssignedTo(
-					id,
-					selectedAssignedTo,
-				);
-				if (updatedTicket?.message) toast.success(updatedTicket.message);
-			};
-			updateTicket();
-		}
-	}, [selectedAssignedTo]);
+	useData(
+		useCallback(
+			() => actionUpdateTicketStatus(id, selectedStatus as StatusType),
+			[id, selectedStatus],
+		),
+		[selectedStatus],
+	);
 
+	useData(
+		useCallback(
+			() => actionUpdateTicketAssignedTo(id, selectedAssignedTo),
+			[id, selectedAssignedTo],
+		),
+		[selectedAssignedTo],
+	);
 	return (
 		<div>
-			<Heading content={`Ticket ${ticket?.title}`} />
-			<div className="mb-10">
-				<Link href={routes.TICKETS} className="text-link">
-					Back to all tickets
+			<div className="flex justify-between items-center mb-12">
+				<Heading content={`Ticket: ${ticket?.title}`} />
+				<Link
+					href={`${path}${routes.EDIT}`}
+					className="inline-flex btn-primary"
+				>
+					Edit
 				</Link>
 			</div>
 			{ticket ? (
@@ -150,18 +136,15 @@ export default function Ticket() {
 							{formatDate(ticket.updatedAt as Date)}
 						</li>
 					</ul>
-					<div className="mt-16">
-						<Link
-							href={`${path}${routes.EDIT}`}
-							className="inline-flex btn-primary mr-6"
-						>
-							Edit
-						</Link>
-					</div>
 				</>
 			) : (
 				<p>Ticket is not found.</p>
 			)}
+			<div className="flex mt-16 mb-10">
+				<Link href={routes.TICKETS} className="btn-secondary">
+					Back
+				</Link>
+			</div>
 		</div>
 	);
 }

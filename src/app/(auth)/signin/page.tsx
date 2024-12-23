@@ -1,8 +1,8 @@
 'use client';
 import { useActionState } from 'react';
 import { actionSignin } from '@/actions/auth';
+import { FormSignIn } from '@/components';
 import { Heading } from '@/components/ui';
-import { FormSignIn } from '@/components/';
 import { useFormToast } from '@/hooks';
 
 export default function SignIn() {
@@ -11,7 +11,7 @@ export default function SignIn() {
 	return (
 		<div className="auth-page">
 			<div className="container w-1/2">
-				<Heading content="Sign In" />
+				<Heading content="Sign In" className="mb-6" />
 				<FormSignIn action={action} isPending={isPending} state={state} />
 			</div>
 		</div>

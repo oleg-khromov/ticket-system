@@ -1,15 +1,15 @@
 'use client';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormInputBox, FormSelectBox } from '@/components';
 import { Form, Button } from '@/components/ui';
 import { USER_ROLE, IUser, IForm } from '@/types/interfaces';
+import { selectRoleOptions } from '@/utils/constants';
+import Link from 'next/link';
+import { routes } from '@/utils/constants';
 
 interface IFormEditUser extends IForm {
 	id: string;
 	user: IUser | null;
-	selectedRole: string;
-	// eslint-disable-next-line no-unused-vars
-	setSelectedRole: (role: string) => void;
 }
 
 export default function FormEditUser({
@@ -20,19 +20,14 @@ export default function FormEditUser({
 	state,
 	id,
 	user,
-	selectedRole,
-	setSelectedRole,
 }: IFormEditUser) {
-	const selectRoleOptions = [
-		{
-			id: USER_ROLE.ADMIN,
-			title: USER_ROLE.ADMIN,
-		},
-		{
-			id: USER_ROLE.USER,
-			title: USER_ROLE.USER,
-		},
-	];
+	const [selectedRole, setSelectedRole] = useState(
+		state?.data?.role || USER_ROLE.ADMIN,
+	);
+
+	useEffect(() => {
+		setSelectedRole(user?.role || USER_ROLE.ADMIN);
+	}, [user]);
 
 	return (
 		<Form action={action} autoComplete={autoComplete} className={className}>
@@ -74,8 +69,11 @@ export default function FormEditUser({
 				defaultValue={(state?.data?.phoneNumber || user?.phoneNumber) ?? ''}
 				errors={state?.errors?.phoneNumber}
 			/>
-			<div className="flex items-end gap-4">
-				<Button text="Edit user" disabled={isPending} />
+			<div className="flex items-end gap-4 justify-between">
+				<Link href={routes.USERS} className="btn-secondary">
+					Back
+				</Link>
+				<Button text="Save" disabled={isPending} />
 			</div>
 		</Form>
 	);

@@ -3,6 +3,8 @@ import React from 'react';
 import { FormInputBox } from '@/components';
 import { Form, Button } from '@/components/ui';
 import { IForm, ICategory } from '@/types/interfaces';
+import Link from 'next/link';
+import { routes } from '@/utils/constants';
 
 interface IFormEditCategory extends IForm {
 	category: ICategory | null;
@@ -29,8 +31,11 @@ export default function FormEditCategory({
 				defaultValue={(state?.data?.title || category?.title) ?? ''}
 				errors={state?.errors?.title}
 			/>
-			<div className="flex items-end gap-4">
-				<Button text="Edit category" disabled={isPending} />
+			<div className="flex items-end gap-4 justify-between">
+				<Link href={routes.CATEGORIES} className="btn-secondary">
+					Back
+				</Link>
+				<Button text="Save" disabled={isPending} />
 			</div>
 		</Form>
 	);

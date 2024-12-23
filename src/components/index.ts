@@ -1,3 +1,4 @@
+import Main from '@/components/Main';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Navigation from '@/components/Navigation';
@@ -20,6 +21,7 @@ import FormEditTicket from '@/components/FormEditTicket';
 import FormEditUser from '@/components/FormEditUser';
 
 export {
+	Main,
 	Header,
 	Footer,
 	Navigation,

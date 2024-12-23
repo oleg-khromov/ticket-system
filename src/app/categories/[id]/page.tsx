@@ -1,33 +1,27 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { actionGetCategory, actionDeleteCategory } from '@/actions/categories';
 import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import { formatDate } from '@/utils/formatters';
-import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
-import { useConfirmationModal } from '@/hooks/useConfirmationModal';
 import { ConfirmationModal } from '@/components';
-import { routes } from '@/utils/constants';
 import { Button, Heading } from '@/components/ui';
-import { ICategory } from '@/types/interfaces';
+import { routes } from '@/utils/constants';
+import { useData, useConfirmationModal } from '@/hooks';
+import toast from 'react-hot-toast';
 
 export default function Category() {
 	const path = usePathname();
 	const router = useRouter();
 	const { id } = useParams<{ id: string }>();
-	const [category, setCategory] = useState<ICategory | null>(null);
+
 	const { isModalOpen, openModal, closeModal, confirmAction, setOnConfirm } =
 		useConfirmationModal();
-	useEffect(() => {
-		if (id) {
-			const fetchCategory = async () => {
-				const fetchedCategory = await actionGetCategory(parseInt(id));
-				setCategory(fetchedCategory);
-			};
-			fetchCategory();
-		}
-	}, [id]);
+
+	const { data: category } = useData(
+		useCallback(() => actionGetCategory(parseInt(id)), [id]),
+		[id],
+	);
 
 	const handleDelete = async () => {
 		const result = await actionDeleteCategory(parseInt(id));
@@ -45,10 +39,13 @@ export default function Category() {
 
 	return (
 		<div>
-			<Heading content={`Category ${category?.title}`} />
-			<div className="mb-10">
-				<Link href={routes.CATEGORIES} className="text-link">
-					Back to all categories
+			<div className="flex justify-between items-center mb-12">
+				<Heading content={`Category: ${category?.title}`} />
+				<Link
+					href={`${path}${routes.EDIT}`}
+					className="inline-flex btn-primary"
+				>
+					Edit
 				</Link>
 			</div>
 			{category ? (
@@ -67,19 +64,16 @@ export default function Category() {
 							{formatDate(category.updatedAt as Date)}
 						</li>
 					</ul>
-					<div className="mt-16">
-						<Link
-							href={`${path}${routes.EDIT}`}
-							className="inline-flex btn-primary mr-6"
-						>
-							Edit
-						</Link>
-						<Button text="Delete" onClick={handleOpenDeleteModal} />
-					</div>
 				</>
 			) : (
 				<p>Category is not found.</p>
 			)}
+			<div className="flex justify-between items-center mt-16">
+				<Link href={routes.CATEGORIES} className="btn-secondary">
+					Back
+				</Link>
+				<Button text="Delete" onClick={handleOpenDeleteModal} />
+			</div>
 			<ConfirmationModal
 				isOpen={isModalOpen}
 				onClose={closeModal}

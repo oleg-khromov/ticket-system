@@ -1,23 +1,15 @@
 'use client';
-import { useEffect, useState } from 'react';
 import { actionGetUsers } from '@/actions/users';
-import { IUser } from '@/types/interfaces';
 import { TableUsers } from '@/components';
 import { Heading } from '@/components/ui';
+import { useData } from '@/hooks';
 
 export default function Users() {
-	const [users, setUsers] = useState<IUser[]>([]);
-	useEffect(() => {
-		const fetchUsers = async () => {
-			const fetchedUsers = await actionGetUsers();
-			setUsers(fetchedUsers);
-		};
-		fetchUsers();
-	}, []);
+	const { data: users } = useData(actionGetUsers, []);
 	return (
 		<div>
-			<Heading content="Users" />
-			{users.length ? <TableUsers users={users} /> : ''}
+			<Heading content="Users" className="mb-12" />
+			{users ? <TableUsers users={users} /> : ''}
 		</div>
 	);
 }

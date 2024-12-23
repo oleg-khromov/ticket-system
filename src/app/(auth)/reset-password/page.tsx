@@ -1,8 +1,8 @@
 'use client';
 import { useActionState } from 'react';
 import { actionResetPassword } from '@/actions/auth';
+import { FormResetPassword } from '@/components';
 import { Heading } from '@/components/ui';
-import { FormResetPassword } from '@/components/';
 import { useFormToast } from '@/hooks';
 
 export default function ResetPassword() {
@@ -14,7 +14,7 @@ export default function ResetPassword() {
 	return (
 		<div className="auth-page">
 			<div className="container w-1/2">
-				<Heading content="Forgot password?" />
+				<Heading content="Forgot password?" className="mb-6" />
 				<p className="small-text">
 					Enter the email address you used when you joined and we will send you
 					instructions to reset your password.

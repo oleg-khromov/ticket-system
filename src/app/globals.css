@@ -22,10 +22,10 @@ body {
 
 @layer base {
 	html {
-		@apply h-full;
+		/* @apply min-h-screen grid grid-rows-[100px_1fr_100px]; */
 	}
 	body {
-		@apply h-full bg-slate-100;
+		/* @apply bg-slate-100 min-h-screen grid-rows-[100px_1fr_100px]; */
 	}
 	header {
 		@apply bg-slate-800 shadow-md;
@@ -34,7 +34,8 @@ body {
 		@apply p-5 mx-auto flex items-center justify-between *:space-x-6 *:flex *:items-center;
 	}
 	main {
-		@apply min-h-screen mx-auto p-5;
+		/* @apply min-h-screen mx-auto p-5; */
+		@apply w-full mx-auto p-5;
 	}
 	select,
 	input[type='text'],
@@ -79,6 +80,9 @@ body {
 	.btn-primary {
 		@apply text-white bg-indigo-600 px-14 py-1.5 rounded-md shadow-sm hover:bg-indigo-700 active:ring-2 ring-offset-1 ring-indigo-700 disabled:bg-slate-300 disabled:text-slate-100 disabled:cursor-not-allowed;
 	}
+	.btn-secondary {
+		@apply text-white bg-slate-400 px-14 py-1.5 rounded-md shadow-sm hover:bg-slate-500 active:ring-2 ring-offset-1 ring-slate-600 disabled:bg-slate-300 disabled:text-slate-100 disabled:cursor-not-allowed;
+	}
 	.text-link {
 		@apply text-sm text-indigo-600 hover:text-indigo-700 underline;
 	}
@@ -89,7 +93,7 @@ body {
 		@apply bg-slate-700;
 	}
 	.title {
-		@apply mb-6 text-center text-3xl font-bold leading-9 text-slate-900;
+		@apply text-center text-3xl font-bold leading-9 text-slate-900;
 	}
 	.error {
 		@apply text-xs text-red-500 mt-1;

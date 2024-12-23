@@ -1,15 +1,13 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { actionGetUser, actionDeleteUser } from '@/actions/users';
 import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
+import { useParams, usePathname, useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation';
-import { useConfirmationModal } from '@/hooks/useConfirmationModal';
-import { ConfirmationModal } from '@/components';
 import { routes } from '@/utils/constants';
+import { ConfirmationModal } from '@/components';
 import { Button, Heading } from '@/components/ui';
-import { IUser } from '@/types/interfaces';
+import { useData, useConfirmationModal } from '@/hooks';
 
 export default function User() {
 	const path = usePathname();
@@ -17,16 +15,11 @@ export default function User() {
 	const { id } = useParams<{ id: string }>();
 	const { isModalOpen, openModal, closeModal, confirmAction, setOnConfirm } =
 		useConfirmationModal();
-	const [user, setUser] = useState<IUser | null>(null);
-	useEffect(() => {
-		if (id) {
-			const fetchUser = async () => {
-				const fetchedUser = await actionGetUser(parseInt(id));
-				setUser(fetchedUser);
-			};
-			fetchUser();
-		}
-	}, [id]);
+
+	const { data: user } = useData(
+		useCallback(() => actionGetUser(parseInt(id)), [id]),
+		[id],
+	);
 
 	const handleDelete = async () => {
 		const result = await actionDeleteUser(parseInt(id));
@@ -43,10 +36,13 @@ export default function User() {
 	};
 	return (
 		<div>
-			<Heading content={`User ${user?.firstName} ${user?.lastName}`} />
-			<div className="mb-10">
-				<Link href={routes.USERS} className="text-link">
-					Back to all users
+			<div className="flex justify-between items-center mb-12">
+				<Heading content={`User: ${user?.firstName} ${user?.lastName}`} />
+				<Link
+					href={`${path}${routes.EDIT}`}
+					className="inline-flex btn-primary"
+				>
+					Edit
 				</Link>
 			</div>
 			{user ? (
@@ -73,19 +69,16 @@ export default function User() {
 							{user.phoneNumber}
 						</li>
 					</ul>
-					<div className="mt-16">
-						<Link
-							href={`${path}${routes.EDIT}`}
-							className="inline-flex btn-primary mr-6"
-						>
-							Edit
-						</Link>
-						<Button text="Delete" onClick={handleOpenDeleteModal} />
-					</div>
 				</>
 			) : (
 				<p>User is not found.</p>
 			)}
+			<div className="flex justify-between items-center mt-16">
+				<Link href={routes.USERS} className="btn-secondary">
+					Back
+				</Link>
+				<Button text="Delete" onClick={handleOpenDeleteModal} />
+			</div>
 			<ConfirmationModal
 				isOpen={isModalOpen}
 				onClose={closeModal}

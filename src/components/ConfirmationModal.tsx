@@ -23,7 +23,7 @@ export default function ConfirmationModal({
 				<h2 className="text-xl font-semibold mb-4">{title}</h2>
 				<p className="mb-4">{description}</p>
 				<div className="flex justify-end space-x-4">
-					<Button text="Cancel" onClick={onClose} />
+					<Button text="Cancel" onClick={onClose} className="btn-secondary" />
 					<Button text="Confirm" onClick={onConfirm} />
 				</div>
 			</div>

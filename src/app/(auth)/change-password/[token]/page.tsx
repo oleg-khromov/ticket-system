@@ -2,8 +2,8 @@
 import { useActionState } from 'react';
 import { actionChangePassword } from '@/actions/auth';
 import { useParams } from 'next/navigation';
+import { FormChangePassword } from '@/components';
 import { Heading } from '@/components/ui';
-import { FormChangePassword } from '@/components/';
 import { useFormToast } from '@/hooks';
 
 export default function ChangePassword() {
@@ -16,7 +16,7 @@ export default function ChangePassword() {
 	return (
 		<div className="auth-page">
 			<div className="container w-1/2">
-				<Heading content="Change password" />
+				<Heading content="Change password" className="mb-6" />
 				<p className="small-text">
 					Set new password to change your current password.
 				</p>
