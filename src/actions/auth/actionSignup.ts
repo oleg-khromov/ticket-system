@@ -22,7 +22,6 @@ export async function actionSignup(
 	const { email } = userWithoutPasswords;
 
 	const existingUser = await getUserByEmail(email);
-
 	if (existingUser) {
 		return {
 			errors: {
@@ -39,7 +38,6 @@ export async function actionSignup(
 		...userWithoutPasswords,
 		password: hashedPassword,
 	});
-
 	if (!createdUser) {
 		return {
 			message: 'An error occurred while creating your account.',

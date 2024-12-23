@@ -4,9 +4,10 @@ import { actionGetUser, actionUpdateUser } from '@/actions/users';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { routes } from '@/utils/constants';
-import { Button } from '@/components/ui';
-import { FormInputBox, FormSelectBox } from '@/components/';
+import { Heading } from '@/components/ui';
+import { FormEditUser } from '@/components';
 import { IUser, USER_ROLE } from '@/types/interfaces';
+import { useFormToast } from '@/hooks';
 
 export default function EditUser() {
 	const { id } = useParams<{ id: string }>();
@@ -18,16 +19,6 @@ export default function EditUser() {
 	const [selectedRole, setSelectedRole] = useState(
 		state?.data?.role || USER_ROLE.ADMIN,
 	);
-	const selectRoleOptions = [
-		{
-			id: USER_ROLE.ADMIN,
-			title: USER_ROLE.ADMIN,
-		},
-		{
-			id: USER_ROLE.USER,
-			title: USER_ROLE.USER,
-		},
-	];
 
 	useEffect(() => {
 		if (id) {
@@ -39,11 +30,10 @@ export default function EditUser() {
 			fetchUser();
 		}
 	}, [id, isPending]);
+	useFormToast(state);
 	return (
 		<div>
-			<h1 className="title">
-				Edit user {`${user?.firstName} ${user?.lastName}`}
-			</h1>
+			<Heading content={`Edit user ${user?.firstName} ${user?.lastName}`} />
 			<div className="mb-10">
 				<Link href={routes.USERS} className="text-link">
 					Back to all users
@@ -51,51 +41,15 @@ export default function EditUser() {
 			</div>
 			{user ? (
 				<div className="container w-3/4">
-					<form action={action} autoComplete="off" className="space-y-4">
-						<input type="hidden" name="id" value={id} />
-						<FormInputBox
-							id="firstName"
-							name="firstName"
-							labelText="First Name"
-							defaultValue={(state?.data?.firstName || user.firstName) ?? ''}
-							errors={state?.errors?.firstName}
-						/>
-						<FormInputBox
-							id="lastName"
-							name="lastName"
-							labelText="Last Name"
-							defaultValue={(state?.data?.lastName || user.lastName) ?? ''}
-							errors={state?.errors?.lastName}
-						/>
-						<FormInputBox
-							id="email"
-							name="email"
-							labelText="Email"
-							defaultValue={(state?.data?.email || user.email) ?? ''}
-							errors={state?.errors?.email}
-						/>
-						<FormSelectBox
-							id="role"
-							name="role"
-							labelText="Role"
-							value={selectedRole}
-							options={selectRoleOptions}
-							onChange={(e) => setSelectedRole(e.target.value)}
-							errors={state?.errors?.category}
-						/>
-						<FormInputBox
-							id="phoneNumber"
-							name="phoneNumber"
-							labelText="Phone Number"
-							defaultValue={
-								(state?.data?.phoneNumber || user.phoneNumber) ?? ''
-							}
-							errors={state?.errors?.phoneNumber}
-						/>
-						<div className="flex items-end gap-4">
-							<Button text="Edit user" disabled={isPending} />
-						</div>
-					</form>
+					<FormEditUser
+						action={action}
+						isPending={isPending}
+						state={state}
+						id={id}
+						user={user}
+						selectedRole={selectedRole}
+						setSelectedRole={setSelectedRole}
+					/>
 				</div>
 			) : (
 				''

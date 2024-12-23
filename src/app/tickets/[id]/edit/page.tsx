@@ -4,22 +4,21 @@ import { actionGetCategories } from '@/actions/categories';
 import { actionGetTicket, actionUpdateTicket } from '@/actions/tickets';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
-import toast from 'react-hot-toast';
 import { routes } from '@/utils/constants';
-import { Button } from '@/components/ui';
-import { FormInputBox, FormTextareaBox, FormSelectBox } from '@/components/';
+import { Heading } from '@/components/ui';
+import { FormEditTicket } from '@/components/';
 import { ICategory, ITicket } from '@/types/interfaces';
+import { useFormToast } from '@/hooks';
 
 export default function EditTicket() {
 	const { id } = useParams<{ id: string }>();
-	const [ticket, setTicket] = useState<ITicket | null>(null);
-	const [categories, setCategories] = useState<ICategory[]>([]);
-	const [selectedCategory, setSelectedCategory] = useState(1);
+
 	const [state, action, isPending] = useActionState(
 		actionUpdateTicket,
 		undefined,
 	);
-
+	const [ticket, setTicket] = useState<ITicket | null>(null);
+	const [categories, setCategories] = useState<ICategory[]>([]);
 	useEffect(() => {
 		if (id) {
 			const fetchTicket = async () => {
@@ -34,18 +33,10 @@ export default function EditTicket() {
 			fetchCategories();
 		}
 	}, [id, isPending]);
-
-	useEffect(() => {
-		setSelectedCategory(ticket?.categoryId || 1);
-	}, [ticket]);
-
-	useEffect(() => {
-		if (state?.message) toast.success(state.message);
-		if (state?.errors?.title) toast.error(state.errors.title);
-	}, [state]);
+	useFormToast(state);
 	return (
 		<div>
-			<h1 className="title">Edit ticket {ticket?.title}</h1>
+			<Heading content={`Edit ticket ${ticket?.title}`} />
 			<div className="mb-10">
 				<Link href={routes.TICKETS} className="text-link">
 					Back to all tickets
@@ -53,35 +44,14 @@ export default function EditTicket() {
 			</div>
 			{ticket ? (
 				<div className="container w-3/4">
-					<form action={action} autoComplete="off" className="space-y-4">
-						<input type="hidden" name="id" value={id} />
-						<FormSelectBox
-							id="categoryId"
-							name="categoryId"
-							labelText="Category"
-							value={selectedCategory || ticket.categoryId}
-							options={categories}
-							onChange={(e) => setSelectedCategory(parseInt(e.target.value))}
-							errors={state?.errors?.category}
-						/>
-						<FormInputBox
-							id="title"
-							name="title"
-							labelText="Title"
-							defaultValue={(state?.data?.title || ticket.title) ?? ''}
-							errors={state?.errors?.title}
-						/>
-						<FormTextareaBox
-							id="content"
-							name="content"
-							labelText="Content"
-							defaultValue={(state?.data?.content || ticket.content) ?? ''}
-							errors={state?.errors?.content}
-						/>
-						<div className="flex items-end gap-4">
-							<Button text="Save" disabled={isPending} />
-						</div>
-					</form>
+					<FormEditTicket
+						action={action}
+						isPending={isPending}
+						state={state}
+						id={id}
+						categories={categories}
+						ticket={ticket}
+					/>
 				</div>
 			) : (
 				''

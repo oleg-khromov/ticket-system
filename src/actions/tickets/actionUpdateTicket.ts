@@ -29,7 +29,6 @@ export async function actionUpdateTicket(
 		createdBy: parseInt(user?.userId as string),
 		categoryId: parseInt(categoryId),
 	});
-
 	if (!updatedTicket)
 		return {
 			data,
@@ -48,7 +47,6 @@ export async function actionUpdateTicketStatus(
 	status: StatusType,
 ): Promise<IActionFormState | undefined> {
 	const updatedTicket = await updateTicketStatus(parseInt(id), status);
-
 	if (!updatedTicket)
 		return {
 			message: 'An error occurred while updating ticket.',
@@ -65,7 +63,6 @@ export async function actionUpdateTicketAssignedTo(
 	assignedTo: number,
 ): Promise<IActionFormState | undefined> {
 	const updatedTicket = await updateTicketAssignedTo(parseInt(id), assignedTo);
-
 	if (!updatedTicket)
 		return {
 			message: 'An error occurred while updating ticket.',

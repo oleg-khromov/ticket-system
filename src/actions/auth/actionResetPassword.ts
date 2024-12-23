@@ -17,7 +17,6 @@ export async function actionResetPassword(
 	const { email } = data;
 
 	const existingUser = await getUserByEmail(email);
-
 	if (!existingUser) {
 		return {
 			errors: {
@@ -34,7 +33,6 @@ export async function actionResetPassword(
 		userId: existingUser.id,
 		expiresAt,
 	});
-
 	if (!createdToken) {
 		return {
 			message: 'An error occurred while creating password reset token.',
@@ -42,7 +40,6 @@ export async function actionResetPassword(
 	}
 
 	const sendEmail = await sendResetPasswordEmail(existingUser.email, token);
-
 	if (sendEmail.error)
 		return {
 			message: 'An error occurred while sending email to reset password.',

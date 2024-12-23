@@ -69,3 +69,12 @@ export interface IActionFormState {
 	message?: string;
 	success?: boolean;
 }
+
+export interface IForm {
+	// eslint-disable-next-line no-unused-vars
+	action: (payload: FormData) => void;
+	autoComplete?: string;
+	className?: string;
+	isPending: boolean;
+	state: IActionFormState | undefined;
+}

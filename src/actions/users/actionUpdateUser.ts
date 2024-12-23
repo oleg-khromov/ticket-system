@@ -19,7 +19,6 @@ export async function actionUpdateUser(
 		parseInt(id),
 		email,
 	);
-
 	if (existingUsers.length)
 		return {
 			errors: {
@@ -35,7 +34,6 @@ export async function actionUpdateUser(
 		role: role === USER_ROLE.ADMIN ? USER_ROLE.ADMIN : USER_ROLE.USER,
 		phoneNumber,
 	});
-
 	if (!updatedUser)
 		return {
 			data,

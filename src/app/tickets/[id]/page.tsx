@@ -17,7 +17,7 @@ import {
 	USER_ROLE,
 	TICKET_STATUS,
 } from '@/types/interfaces';
-import { Select } from '@/components/ui';
+import { Select, Heading } from '@/components/ui';
 
 const selectTicketStatusOptions = Object.values(TICKET_STATUS).map(
 	(status) => ({
@@ -89,7 +89,7 @@ export default function Ticket() {
 
 	return (
 		<div>
-			<h1 className="title">Ticket {ticket?.title}</h1>
+			<Heading content={`Ticket ${ticket?.title}`} />
 			<div className="mb-10">
 				<Link href={routes.TICKETS} className="text-link">
 					Back to all tickets

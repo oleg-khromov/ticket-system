@@ -5,6 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { routes } from '@/utils/constants';
 import { ICategory } from '@/types/interfaces';
+import { Heading } from '@/components/ui';
+import { TableCategories } from '@/components';
 
 export default function Categories() {
 	const path = usePathname();
@@ -18,41 +20,9 @@ export default function Categories() {
 	}, []);
 	return (
 		<div>
-			<h1 className="title">Categories</h1>
+			<Heading content="Categories" />
 			{categories.length ? (
-				<table>
-					<thead>
-						<tr>
-							<th scope="col" className="w-10/12">
-								Title
-							</th>
-							<th scope="col">
-								<span>&nbsp;</span>
-							</th>
-						</tr>
-					</thead>
-					<tbody>
-						{categories.map(({ id, title }) => {
-							return (
-								<tr key={title}>
-									<td>
-										<Link href={`${path}/${id}`} className="text-link">
-											{title}
-										</Link>
-									</td>
-									<td>
-										<Link
-											href={`${path}/${id}${routes.EDIT}`}
-											className="text-link"
-										>
-											<b>Edit</b>
-										</Link>
-									</td>
-								</tr>
-							);
-						})}
-					</tbody>
-				</table>
+				<TableCategories categories={categories} />
 			) : (
 				<p className="text-center mb-6">Add your first category.</p>
 			)}

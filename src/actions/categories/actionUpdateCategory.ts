@@ -14,7 +14,6 @@ export async function actionUpdateCategory(
 	const { id, title } = data;
 
 	const existingCategory = await getCategoryByTitle(title);
-
 	if (existingCategory)
 		return {
 			errors: {
@@ -24,7 +23,6 @@ export async function actionUpdateCategory(
 		};
 
 	const updatedCategory = await updateCategory(parseInt(id), { title });
-
 	if (!updatedCategory)
 		return {
 			data,

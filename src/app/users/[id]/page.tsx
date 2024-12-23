@@ -8,16 +8,16 @@ import { useRouter } from 'next/navigation';
 import { useConfirmationModal } from '@/hooks/useConfirmationModal';
 import { ConfirmationModal } from '@/components';
 import { routes } from '@/utils/constants';
-import { Button } from '@/components/ui';
+import { Button, Heading } from '@/components/ui';
 import { IUser } from '@/types/interfaces';
 
 export default function User() {
 	const path = usePathname();
 	const router = useRouter();
 	const { id } = useParams<{ id: string }>();
-	const [user, setUser] = useState<IUser | null>(null);
 	const { isModalOpen, openModal, closeModal, confirmAction, setOnConfirm } =
 		useConfirmationModal();
+	const [user, setUser] = useState<IUser | null>(null);
 	useEffect(() => {
 		if (id) {
 			const fetchUser = async () => {
@@ -43,7 +43,7 @@ export default function User() {
 	};
 	return (
 		<div>
-			<h1 className="title">User {`${user?.firstName} ${user?.lastName}`}</h1>
+			<Heading content={`User ${user?.firstName} ${user?.lastName}`} />
 			<div className="mb-10">
 				<Link href={routes.USERS} className="text-link">
 					Back to all users

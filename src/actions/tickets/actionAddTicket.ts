@@ -19,7 +19,6 @@ export async function actionAddTicket(
 		title,
 		parseInt(categoryId),
 	);
-
 	if (existingTicket)
 		return {
 			errors: {
@@ -36,7 +35,6 @@ export async function actionAddTicket(
 		createdBy: parseInt(user?.userId as string),
 		categoryId: parseInt(categoryId),
 	});
-
 	if (!createdTicket)
 		return {
 			message: 'An error occurred while creating new ticket.',

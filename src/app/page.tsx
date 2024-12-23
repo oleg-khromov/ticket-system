@@ -1,7 +1,9 @@
+import { Heading } from '@/components/ui';
+
 export default function Home() {
 	return (
 		<div>
-			<h1 className="title">Wellcom to Ticket System</h1>
+			<Heading content="Wellcom to Ticket System" />
 		</div>
 	);
 }

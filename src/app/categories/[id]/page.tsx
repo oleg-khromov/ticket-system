@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useConfirmationModal } from '@/hooks/useConfirmationModal';
 import { ConfirmationModal } from '@/components';
 import { routes } from '@/utils/constants';
-import { Button } from '@/components/ui';
+import { Button, Heading } from '@/components/ui';
 import { ICategory } from '@/types/interfaces';
 
 export default function Category() {
@@ -45,7 +45,7 @@ export default function Category() {
 
 	return (
 		<div>
-			<h1 className="title">Category {category?.title}</h1>
+			<Heading content={`Category ${category?.title}`} />
 			<div className="mb-10">
 				<Link href={routes.CATEGORIES} className="text-link">
 					Back to all categories

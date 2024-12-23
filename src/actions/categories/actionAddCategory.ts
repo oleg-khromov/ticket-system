@@ -14,7 +14,6 @@ export async function actionAddCategory(
 	const { data } = validatedForm;
 
 	const existingCategory = await getCategoryByTitle(data.title);
-
 	if (existingCategory)
 		return {
 			errors: {
@@ -24,7 +23,6 @@ export async function actionAddCategory(
 		};
 
 	const createdCategory = await createCategory(data);
-
 	if (!createdCategory)
 		return {
 			message: 'An error occurred while creating new category.',

@@ -21,7 +21,6 @@ export async function actionChangePassword(
 	const { password } = data;
 
 	const token = formData.get('token') as string;
-
 	if (!token)
 		return {
 			message: 'Invalid token.',
@@ -44,7 +43,6 @@ export async function actionChangePassword(
 		};
 
 	const existingToken = await getPasswordResetToken(userId, token);
-
 	if (!existingToken || new Date(existingToken.expiresAt) < new Date()) {
 		return {
 			message: 'Invalid or expired token.',
@@ -52,7 +50,6 @@ export async function actionChangePassword(
 	}
 
 	const hashedPassword = await getHashPassword(password);
-
 	await updateUserPassword(userId, hashedPassword);
 	await deletePasswordResetToken(userId, token);
 

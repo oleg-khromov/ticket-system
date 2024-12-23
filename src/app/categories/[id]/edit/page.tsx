@@ -4,9 +4,10 @@ import { actionGetCategory, actionUpdateCategory } from '@/actions/categories';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { routes } from '@/utils/constants';
-import { Button } from '@/components/ui';
-import { FormInputBox } from '@/components/';
+import { Heading } from '@/components/ui';
+import { FormEditCategory } from '@/components/';
 import { ICategory } from '@/types/interfaces';
+import { useFormToast } from '@/hooks';
 
 export default function EditCategory() {
 	const { id } = useParams<{ id: string }>();
@@ -15,7 +16,7 @@ export default function EditCategory() {
 		actionUpdateCategory,
 		undefined,
 	);
-
+	useFormToast(state);
 	useEffect(() => {
 		if (id) {
 			const fetchCategory = async () => {
@@ -27,7 +28,7 @@ export default function EditCategory() {
 	}, [id, isPending]);
 	return (
 		<div>
-			<h1 className="title">Edit category {category?.title}</h1>
+			<Heading content={`Edit category ${category?.title}`} />
 			<div className="mb-10">
 				<Link href={routes.CATEGORIES} className="text-link">
 					Back to all categories
@@ -35,20 +36,13 @@ export default function EditCategory() {
 			</div>
 			{category ? (
 				<div className="container w-3/4">
-					<form action={action} autoComplete="off" className="space-y-4">
-						<input type="hidden" name="id" value={id} />
-						<input type="hidden" name="currentTitle" value={category.title} />
-						<FormInputBox
-							id="title"
-							name="title"
-							labelText="Title"
-							defaultValue={(state?.data?.title || category.title) ?? ''}
-							errors={state?.errors?.title}
-						/>
-						<div className="flex items-end gap-4">
-							<Button text="Edit category" disabled={isPending} />
-						</div>
-					</form>
+					<FormEditCategory
+						action={action}
+						isPending={isPending}
+						state={state}
+						category={category}
+						id={id}
+					/>
 				</div>
 			) : (
 				''

@@ -1,48 +1,28 @@
 'use client';
-import { useActionState, useEffect } from 'react';
+import { useActionState } from 'react';
 import { actionAddCategory } from '@/actions/categories';
-import toast from 'react-hot-toast';
 import Link from 'next/link';
 import { routes } from '@/utils/constants';
-import { Button } from '@/components/ui';
-import { FormInputBox } from '@/components/';
+import { Heading } from '@/components/ui';
+import { FormNewCategory } from '@/components/';
+import { useFormToast } from '@/hooks';
 
 export default function AddCategory() {
 	const [state, action, isPending] = useActionState(
 		actionAddCategory,
 		undefined,
 	);
-
-	useEffect(() => {
-		if (state?.message) toast.success(state.message);
-		if (state?.errors?.title) toast.error(state.errors.title);
-	}, [state]);
+	useFormToast(state);
 	return (
 		<div>
-			<h1 className="title">Add category</h1>
+			<Heading content="Add category" />
 			<div className="mb-10">
 				<Link href={routes.CATEGORIES} className="text-link">
 					Back to all categories
 				</Link>
 			</div>
-			{state?.message ? (
-				<p className="text-center mb-6">{state.message}</p>
-			) : (
-				''
-			)}
 			<div className="container w-3/4">
-				<form action={action} autoComplete="off" className="space-y-4">
-					<FormInputBox
-						id="title"
-						name="title"
-						labelText="Title"
-						defaultValue={state?.data?.title ?? ''}
-						errors={state?.errors?.title}
-					/>
-					<div className="flex items-end gap-4">
-						<Button text="Add category" disabled={isPending} />
-					</div>
-				</form>
+				<FormNewCategory action={action} isPending={isPending} state={state} />
 			</div>
 		</div>
 	);
