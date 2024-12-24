@@ -44,9 +44,13 @@ export async function actionSignup(
 		};
 	}
 
-	await sendConfirmationEmail(createdUser.email);
-
 	await createSession(createdUser.id);
 
-	redirect(routes.SIGNIN);
+	const sendEmail = await sendConfirmationEmail(createdUser.email);
+	if (sendEmail.error)
+		return {
+			message:
+				'An error occurred while sending email to reset password. But you can SIGN IN',
+		};
+	else redirect(routes.SIGNIN);
 }

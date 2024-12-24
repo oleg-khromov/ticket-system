@@ -11,6 +11,7 @@ export default function ResetPassword() {
 		undefined,
 	);
 	useFormToast(state);
+	console.log('use token to change your password:', state?.data?.token);
 	return (
 		<div className="auth-page">
 			<div className="container w-1/2">

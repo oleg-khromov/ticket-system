@@ -42,6 +42,9 @@ export async function actionResetPassword(
 	const sendEmail = await sendResetPasswordEmail(existingUser.email, token);
 	if (sendEmail.error)
 		return {
+			data: {
+				token: createdToken.token,
+			},
 			message: 'An error occurred while sending email to reset password.',
 		};
 	else
