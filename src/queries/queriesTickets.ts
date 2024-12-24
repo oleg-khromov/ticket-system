@@ -53,6 +53,22 @@ export async function getTickets() {
 	});
 }
 
+export async function getTicketsByCreatorId(id: number) {
+	return await prisma.ticket.findMany({
+		where: {
+			createdBy: id,
+		},
+		include: {
+			createdByUser: {},
+			assignedToUser: {},
+			category: {},
+		},
+		orderBy: {
+			createdAt: 'asc',
+		},
+	});
+}
+
 export async function createTicket(data: ITicket) {
 	return await prisma.ticket.create({
 		data,

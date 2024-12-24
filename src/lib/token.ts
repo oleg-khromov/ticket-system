@@ -41,6 +41,5 @@ export async function createToken(userId: number) {
 
 export async function verifyToken(token: string) {
 	const payload = await decrypt(token);
-
 	return payload || {};
 }

@@ -3,16 +3,16 @@ import { useCallback } from 'react';
 import { actionGetUser, actionDeleteUser } from '@/actions/users';
 import Link from 'next/link';
 import { useParams, usePathname, useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 import { routes } from '@/utils/constants';
 import { ConfirmationModal } from '@/components';
 import { Button, Heading } from '@/components/ui';
-import { useData, useConfirmationModal } from '@/hooks';
+import { useData, useHandler, useConfirmationModal } from '@/hooks';
 
 export default function User() {
 	const path = usePathname();
 	const router = useRouter();
 	const { id } = useParams<{ id: string }>();
+	const [executeDelete] = useHandler();
 	const { isModalOpen, openModal, closeModal, confirmAction, setOnConfirm } =
 		useConfirmationModal();
 
@@ -21,17 +21,13 @@ export default function User() {
 		[id],
 	);
 
-	const handleDelete = async () => {
-		const result = await actionDeleteUser(parseInt(id));
-		if (result?.success) {
-			toast.success(result.success);
-			router.push(routes.USERS);
-		}
-		if (result?.message) toast.error(result.message);
-	};
-
 	const handleOpenDeleteModal = () => {
-		setOnConfirm(() => handleDelete());
+		setOnConfirm(() =>
+			executeDelete(
+				() => actionDeleteUser(parseInt(id)),
+				() => router.push(routes.USERS),
+			),
+		);
 		openModal();
 	};
 	return (
@@ -48,23 +44,23 @@ export default function User() {
 			{user ? (
 				<>
 					<ul>
-						<li className="flex">
+						<li className="flex mb-3">
 							<b className="w-1/5 mr-6">First Name:</b>
 							{user.firstName}
 						</li>
-						<li className="flex">
+						<li className="flex mb-3">
 							<b className="w-1/5 mr-6">Last Name:</b>
 							{user.lastName}
 						</li>
-						<li className="flex">
+						<li className="flex mb-3">
 							<b className="w-1/5 mr-6">Email:</b>
 							{user.email}
 						</li>
-						<li className="flex">
+						<li className="flex mb-3">
 							<b className="w-1/5 mr-6">Role:</b>
 							{user.role}
 						</li>
-						<li className="flex">
+						<li className="flex mb-3">
 							<b className="w-1/5 mr-6">Phone Number:</b>
 							{user.phoneNumber}
 						</li>

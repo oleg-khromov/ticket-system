@@ -26,7 +26,7 @@ export async function actionUpdateTicket(
 
 	const updatedTicket = await updateTicket(parseInt(id), {
 		...data,
-		createdBy: parseInt(user?.userId as string),
+		createdBy: user?.id as number,
 		categoryId: parseInt(categoryId),
 	});
 	if (!updatedTicket)
@@ -53,7 +53,10 @@ export async function actionUpdateTicketStatus(
 		};
 
 	return {
-		message: 'Ticket has updated successfully.',
+		data: {
+			status: updatedTicket.status,
+		},
+		message: 'Ticket status field has updated successfully.',
 		success: true,
 	};
 }
@@ -69,7 +72,10 @@ export async function actionUpdateTicketAssignedTo(
 		};
 
 	return {
-		message: 'Ticket has updated successfully.',
+		data: {
+			assignedTo: updatedTicket.assignedTo,
+		},
+		message: 'Ticket assignedTo field has updated successfully.',
 		success: true,
 	};
 }

@@ -28,7 +28,7 @@ export default function FormEditCategory({
 				id="title"
 				name="title"
 				labelText="Title"
-				defaultValue={(state?.data?.title || category?.title) ?? ''}
+				defaultValue={((state?.data?.title || category?.title) as string) ?? ''}
 				errors={state?.errors?.title}
 			/>
 			<div className="flex items-end gap-4 justify-between">

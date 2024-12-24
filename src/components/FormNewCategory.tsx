@@ -19,7 +19,7 @@ export default function FormNewCategory({
 				id="title"
 				name="title"
 				labelText="Title"
-				defaultValue={state?.data?.title ?? ''}
+				defaultValue={(state?.data?.title as string) ?? ''}
 				errors={state?.errors?.title}
 			/>
 			<div className="flex items-end gap-4 justify-between">

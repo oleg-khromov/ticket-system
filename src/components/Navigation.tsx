@@ -1,20 +1,22 @@
+'use client';
 import { NavLink } from '@/components';
 import { actionLogout } from '@/actions/auth';
-import { getAuthUser } from '@/lib/getAuthUser';
+import { useAuth } from '@/hooks';
 import { routes } from '@/utils/constants';
 import { Button } from '@/components/ui';
 
-export default async function Navigation() {
-	const authUser = await getAuthUser();
+export default function Navigation() {
+	const { user, isAdmin } = useAuth();
+
 	return (
 		<nav>
 			<NavLink label="Home" href={routes.HOME} />
 			<div>
-				{authUser ? (
+				{user ? (
 					<>
-						<NavLink label="Categories" href={routes.CATEGORIES} />
+						{isAdmin && <NavLink label="Categories" href={routes.CATEGORIES} />}
 						<NavLink label="Tickets" href={routes.TICKETS} />
-						<NavLink label="Users" href={routes.USERS} />
+						{isAdmin && <NavLink label="Users" href={routes.USERS} />}
 						<form action={actionLogout}>
 							<Button text="Logout" className="nav-link" />
 						</form>

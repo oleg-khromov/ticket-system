@@ -19,7 +19,7 @@ export default function FormChangePassword({
 				id="email"
 				name="email"
 				labelText="Email"
-				defaultValue={state?.data?.email ?? ''}
+				defaultValue={(state?.data?.email as string) ?? ''}
 				errors={state?.errors?.email}
 			/>
 			<div className="flex items-end gap-4">

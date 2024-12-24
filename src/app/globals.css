@@ -22,10 +22,8 @@ body {
 
 @layer base {
 	html {
-		/* @apply min-h-screen grid grid-rows-[100px_1fr_100px]; */
 	}
 	body {
-		/* @apply bg-slate-100 min-h-screen grid-rows-[100px_1fr_100px]; */
 	}
 	header {
 		@apply bg-slate-800 shadow-md;
@@ -34,7 +32,6 @@ body {
 		@apply p-5 mx-auto flex items-center justify-between *:space-x-6 *:flex *:items-center;
 	}
 	main {
-		/* @apply min-h-screen mx-auto p-5; */
 		@apply w-full mx-auto p-5;
 	}
 	select,

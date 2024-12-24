@@ -28,11 +28,10 @@ export async function actionAddTicket(
 		};
 
 	const user = await getAuthUser();
-	console.log(user, 'user');
 
 	const createdTicket = await createTicket({
 		...data,
-		createdBy: parseInt(user?.userId as string),
+		createdBy: user?.id as number,
 		categoryId: parseInt(categoryId),
 	});
 	if (!createdTicket)

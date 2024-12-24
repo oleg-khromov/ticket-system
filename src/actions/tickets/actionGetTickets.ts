@@ -1,6 +1,12 @@
 'use server';
-import { getTickets } from '@/queries';
+import { getTickets, getTicketsByCreatorId } from '@/queries';
+import { getAuthUser } from '@/lib/getAuthUser';
+import { USER_ROLE } from '@/types/interfaces';
 
 export async function actionGetTickets() {
-	return getTickets();
+	const user = await getAuthUser();
+
+	return user?.role === USER_ROLE.ADMIN
+		? getTickets()
+		: getTicketsByCreatorId(user?.id as number);
 }

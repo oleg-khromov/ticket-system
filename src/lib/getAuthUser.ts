@@ -1,12 +1,17 @@
 'use server';
 import { cache } from 'react';
-import { decrypt, getSession } from '@/lib/session';
+import { verifySession } from '@/lib/session';
+import { getUserById } from '@/queries';
 
 export const getAuthUser = cache(async () => {
-	const session = await getSession();
+	const payload = await verifySession();
+	if (!payload?.userId) return null;
 
-	if (session) {
-		const user = await decrypt(session);
-		return user;
-	}
+	const user = await getUserById(payload.userId);
+	if (!user) return null;
+
+	// eslint-disable-next-line no-unused-vars
+	const { id, role, ...rest } = user;
+
+	return { id, role };
 });

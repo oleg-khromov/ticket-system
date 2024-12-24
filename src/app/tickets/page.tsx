@@ -18,7 +18,7 @@ export default function Tickets() {
 					Add ticket
 				</Link>
 			</div>
-			{tickets ? (
+			{tickets && tickets.length ? (
 				<TableTickets tickets={tickets} />
 			) : (
 				<p className="text-center mb-6">Add your first ticket.</p>

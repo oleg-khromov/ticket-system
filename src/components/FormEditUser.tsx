@@ -36,28 +36,32 @@ export default function FormEditUser({
 				id="firstName"
 				name="firstName"
 				labelText="First Name"
-				defaultValue={(state?.data?.firstName || user?.firstName) ?? ''}
+				defaultValue={
+					((state?.data?.firstName || user?.firstName) as string) ?? ''
+				}
 				errors={state?.errors?.firstName}
 			/>
 			<FormInputBox
 				id="lastName"
 				name="lastName"
 				labelText="Last Name"
-				defaultValue={(state?.data?.lastName || user?.lastName) ?? ''}
+				defaultValue={
+					((state?.data?.lastName || user?.lastName) as string) ?? ''
+				}
 				errors={state?.errors?.lastName}
 			/>
 			<FormInputBox
 				id="email"
 				name="email"
 				labelText="Email"
-				defaultValue={(state?.data?.email || user?.email) ?? ''}
+				defaultValue={((state?.data?.email || user?.email) as string) ?? ''}
 				errors={state?.errors?.email}
 			/>
 			<FormSelectBox
 				id="role"
 				name="role"
 				labelText="Role"
-				value={selectedRole}
+				value={selectedRole as string | number}
 				options={selectRoleOptions}
 				onChange={(e) => setSelectedRole(e.target.value)}
 				errors={state?.errors?.category}
@@ -66,7 +70,9 @@ export default function FormEditUser({
 				id="phoneNumber"
 				name="phoneNumber"
 				labelText="Phone Number"
-				defaultValue={(state?.data?.phoneNumber || user?.phoneNumber) ?? ''}
+				defaultValue={
+					((state?.data?.phoneNumber || user?.phoneNumber) as string) ?? ''
+				}
 				errors={state?.errors?.phoneNumber}
 			/>
 			<div className="flex items-end gap-4 justify-between">

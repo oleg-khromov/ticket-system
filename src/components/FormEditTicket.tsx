@@ -45,14 +45,16 @@ export default function FormEditTicket({
 				id="title"
 				name="title"
 				labelText="Title"
-				defaultValue={(state?.data?.title || ticket?.title) ?? ''}
+				defaultValue={((state?.data?.title || ticket?.title) as string) ?? ''}
 				errors={state?.errors?.title}
 			/>
 			<FormTextareaBox
 				id="content"
 				name="content"
 				labelText="Content"
-				defaultValue={(state?.data?.content || ticket?.content) ?? ''}
+				defaultValue={
+					((state?.data?.content || ticket?.content) as string) ?? ''
+				}
 				errors={state?.errors?.content}
 			/>
 			<div className="flex items-end gap-4 justify-between">

@@ -65,7 +65,7 @@ export interface ITicketWithFullInformation extends ITicket {
 
 export interface IActionFormState {
 	errors?: Record<string, string | string[]>;
-	data?: Record<string, string>;
+	data?: Record<string, string | number | Date | null>;
 	message?: string;
 	success?: boolean;
 }

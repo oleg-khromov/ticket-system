@@ -2,5 +2,5 @@
 import { getCategories } from '@/queries';
 
 export async function actionGetCategories() {
-	return getCategories();
+	return await getCategories();
 }

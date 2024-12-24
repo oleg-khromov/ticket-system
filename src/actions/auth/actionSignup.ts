@@ -45,8 +45,6 @@ export async function actionSignup(
 	}
 
 	await sendConfirmationEmail(createdUser.email);
-	// const { error } = await sendConfirmationEmail(createdUser.email);
-	// if (error) return { message: 'Failed to send confirmation email' };
 
 	await createSession(createdUser.id);
 

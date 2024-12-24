@@ -19,7 +19,7 @@ export default function FormSignIn({
 				id="email"
 				name="email"
 				labelText="Email"
-				defaultValue={state?.data?.email ?? ''}
+				defaultValue={(state?.data?.email as string) ?? ''}
 				errors={state?.errors?.email}
 			/>
 			<FormInputBox

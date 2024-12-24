@@ -56,7 +56,6 @@ export async function updateSession() {
 	}
 
 	const payload = await decrypt(session);
-
 	if (!payload) {
 		return null;
 	}
@@ -78,11 +77,13 @@ export async function getSession() {
 
 export async function verifySession() {
 	const session = await getSession();
-	const payload = await decrypt(session);
 
+	if (!session) return null;
+
+	const payload = await decrypt(session);
 	if (!payload?.userId) {
 		redirect(routes.SIGNIN);
 	}
 
-	return { userId: payload?.userId };
+	return { userId: payload?.userId as number };
 }

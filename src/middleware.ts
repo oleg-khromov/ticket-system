@@ -38,17 +38,17 @@ export default async function middleware(
 	const isPublicRoute: boolean = isRouteMatching(publicRoutePatterns, path);
 
 	const session = await getSession();
-	const payload = await decrypt(session);
+	const user = await decrypt(session);
 
 	if (!isProtectedRoute && !isPublicRoute) {
 		return new NextResponse('Not Found', { status: 404 });
 	}
 
-	if (isProtectedRoute && !payload?.userId) {
+	if (isProtectedRoute && !user?.userId) {
 		return NextResponse.redirect(new URL(routes.SIGNIN, req.nextUrl));
 	}
 
-	if (isPublicRoute && payload?.userId && path !== routes.HOME) {
+	if (isPublicRoute && user?.userId && path !== routes.HOME) {
 		return NextResponse.redirect(new URL(routes.TICKETS, req.nextUrl));
 	}
 

@@ -19,7 +19,7 @@ export default function FormSignUp({
 				id="firstName"
 				name="firstName"
 				labelText="First Name"
-				defaultValue={state?.data?.firstName ?? ''}
+				defaultValue={(state?.data?.firstName as string) ?? ''}
 				errors={state?.errors?.firstName}
 				required={true}
 			/>
@@ -27,7 +27,7 @@ export default function FormSignUp({
 				id="lastName"
 				name="lastName"
 				labelText="Last Name"
-				defaultValue={state?.data?.lastName ?? ''}
+				defaultValue={(state?.data?.lastName as string) ?? ''}
 				errors={state?.errors?.lastName}
 				required={true}
 			/>
@@ -35,14 +35,14 @@ export default function FormSignUp({
 				id="phoneNumber"
 				name="phoneNumber"
 				labelText="Phone Number"
-				defaultValue={state?.data?.phoneNumber ?? ''}
+				defaultValue={(state?.data?.phoneNumber as string) ?? ''}
 				errors={state?.errors?.phoneNumber}
 			/>
 			<FormInputBox
 				id="email"
 				name="email"
 				labelText="Email"
-				defaultValue={state?.data?.email ?? ''}
+				defaultValue={(state?.data?.email as string) ?? ''}
 				errors={state?.errors?.email}
 				required={true}
 			/>

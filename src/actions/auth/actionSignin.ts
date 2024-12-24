@@ -2,9 +2,7 @@
 import { SignInFormSchema } from '@/schemas';
 import { verifyPassword } from '@/lib/bcrypt';
 import { createSession } from '@/lib/session';
-import { redirect } from 'next/navigation';
 import { getUserWithPasswordByEmail } from '@/queries';
-import { routes } from '@/utils/constants';
 import { IActionFormState } from '@/types/interfaces';
 import { validateForm } from '@/utils/utils';
 
@@ -42,5 +40,11 @@ export async function actionSignin(
 
 	await createSession(existingUser.id);
 
-	redirect(routes.TICKETS);
+	return {
+		data: {
+			id: existingUser?.id.toString(),
+			role: existingUser.role,
+		},
+		success: true,
+	};
 }

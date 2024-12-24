@@ -7,13 +7,13 @@ import { formatDate } from '@/utils/formatters';
 import { ConfirmationModal } from '@/components';
 import { Button, Heading } from '@/components/ui';
 import { routes } from '@/utils/constants';
-import { useData, useConfirmationModal } from '@/hooks';
-import toast from 'react-hot-toast';
+import { useData, useHandler, useConfirmationModal } from '@/hooks';
 
 export default function Category() {
 	const path = usePathname();
 	const router = useRouter();
 	const { id } = useParams<{ id: string }>();
+	const [executeDelete] = useHandler();
 
 	const { isModalOpen, openModal, closeModal, confirmAction, setOnConfirm } =
 		useConfirmationModal();
@@ -23,17 +23,13 @@ export default function Category() {
 		[id],
 	);
 
-	const handleDelete = async () => {
-		const result = await actionDeleteCategory(parseInt(id));
-		if (result?.success) {
-			toast.success(result.success);
-			router.push(routes.CATEGORIES);
-		}
-		if (result?.message) toast.error(result.message);
-	};
-
 	const handleOpenDeleteModal = () => {
-		setOnConfirm(() => handleDelete());
+		setOnConfirm(() =>
+			executeDelete(
+				() => actionDeleteCategory(parseInt(id)),
+				() => router.push(routes.CATEGORIES),
+			),
+		);
 		openModal();
 	};
 
@@ -51,15 +47,15 @@ export default function Category() {
 			{category ? (
 				<>
 					<ul>
-						<li className="flex">
+						<li className="flex mb-3">
 							<b className="w-1/5 mr-6">Title:</b>
 							{category.title}
 						</li>
-						<li className="flex">
+						<li className="flex mb-3">
 							<b className="w-1/5 mr-6">Created At:</b>
 							{formatDate(category.createdAt as Date)}
 						</li>
-						<li className="flex">
+						<li className="flex mb-3">
 							<b className="w-1/5 mr-6">Updated At:</b>
 							{formatDate(category.updatedAt as Date)}
 						</li>

@@ -35,20 +35,29 @@ export async function getUserWithPasswordByEmail(email: string) {
 			id: true,
 			email: true,
 			password: true,
+			role: true,
 		},
 	});
 }
 
-export async function getUserWithUnresolvedTickets(assignedTo: number) {
+export async function getUserWithUnresolvedTickets(id: number) {
 	return await prisma.ticket.findFirst({
 		where: {
 			OR: [
 				{
-					assignedTo,
+					assignedTo: id,
 					status: TICKET_STATUS.Pending,
 				},
 				{
-					assignedTo,
+					assignedTo: id,
+					status: TICKET_STATUS.InProgress,
+				},
+				{
+					createdBy: id,
+					status: TICKET_STATUS.Pending,
+				},
+				{
+					createdBy: id,
 					status: TICKET_STATUS.InProgress,
 				},
 			],
