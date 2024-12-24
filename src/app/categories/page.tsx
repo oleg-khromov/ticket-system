@@ -18,7 +18,7 @@ export default function Categories() {
 					Add category
 				</Link>
 			</div>
-			{categories ? (
+			{categories && categories.length ? (
 				<TableCategories categories={categories} />
 			) : (
 				<p className="text-center mb-6">Add your first category.</p>

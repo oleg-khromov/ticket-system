@@ -9,7 +9,7 @@ export default function Users() {
 	return (
 		<div>
 			<Heading content="Users" className="mb-12" />
-			{users ? <TableUsers users={users} /> : ''}
+			{users && users.length ? <TableUsers users={users} /> : ''}
 		</div>
 	);
 }
