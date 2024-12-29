@@ -6,7 +6,6 @@ interface IUseConfirmationModalResult {
 	openModal: () => void;
 	closeModal: () => void;
 	confirmAction: () => void;
-	// eslint-disable-next-line no-unused-vars
 	setOnConfirm: (action: () => void) => void;
 }
 

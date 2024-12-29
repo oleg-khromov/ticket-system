@@ -1,7 +1,6 @@
 import React from 'react';
 
 interface IForm {
-	// eslint-disable-next-line no-unused-vars
 	action: (payload: FormData) => void;
 	autoComplete?: string;
 	children: React.ReactNode;

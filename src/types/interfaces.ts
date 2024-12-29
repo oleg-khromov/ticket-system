@@ -1,16 +1,11 @@
 export enum USER_ROLE {
-	// eslint-disable-next-line no-unused-vars
 	USER = 'USER',
-	// eslint-disable-next-line no-unused-vars
 	ADMIN = 'ADMIN',
 }
 
 export enum TICKET_STATUS {
-	// eslint-disable-next-line no-unused-vars
 	Pending = 'Pending',
-	// eslint-disable-next-line no-unused-vars
 	InProgress = 'InProgress',
-	// eslint-disable-next-line no-unused-vars
 	Resolved = 'Resolved',
 }
 
@@ -71,7 +66,6 @@ export interface IActionFormState {
 }
 
 export interface IForm {
-	// eslint-disable-next-line no-unused-vars
 	action: (payload: FormData) => void;
 	autoComplete?: string;
 	className?: string;

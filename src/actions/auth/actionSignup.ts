@@ -17,7 +17,6 @@ export async function actionSignup(
 	if (!validatedForm.success) return validatedForm;
 
 	const { data } = validatedForm;
-	// eslint-disable-next-line no-unused-vars
 	const { password, confirmPassword, ...userWithoutPasswords } = data;
 	const { email } = userWithoutPasswords;
 

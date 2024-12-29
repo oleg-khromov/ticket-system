@@ -12,9 +12,7 @@ type AuthUserType = {
 type AuthContextType = {
 	user: AuthUserType;
 	isAdmin: boolean;
-	// eslint-disable-next-line no-unused-vars
 	setUser: (user: AuthUserType) => void;
-	// eslint-disable-next-line no-unused-vars
 	setIsAdmin: (isAdmin: boolean) => void;
 };
 

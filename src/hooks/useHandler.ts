@@ -2,17 +2,12 @@ import toast from 'react-hot-toast';
 import { useState } from 'react';
 import { IActionFormState } from '@/types/interfaces';
 
-// eslint-disable-next-line no-unused-vars
 type AsyncAction<T> = (...args: any[]) => Promise<T>;
 
-// eslint-disable-next-line no-unused-vars
 type UseAsyncActionReturn<T> = [
 	(
-		// eslint-disable-next-line no-unused-vars
 		action: AsyncAction<IActionFormState | undefined>,
-		// eslint-disable-next-line no-unused-vars
 		callback: Function,
-		// eslint-disable-next-line no-unused-vars
 		updatedField?: string,
 	) => Promise<void>,
 	boolean,

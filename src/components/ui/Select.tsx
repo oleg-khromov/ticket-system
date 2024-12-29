@@ -5,7 +5,6 @@ export interface ISelect {
 	name: string;
 	value?: number | string;
 	options: any[] | null;
-	// eslint-disable-next-line no-unused-vars
 	onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
